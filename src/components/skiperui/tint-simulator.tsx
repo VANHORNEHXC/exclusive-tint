@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, Sun, Eye, Flame, CheckCircle2 } from "lucide-react";
 
@@ -94,21 +95,26 @@ export function TintSimulator() {
           </p>
         </div>
 
-        {/* Selected badge */}
+        {/* Selected badge with Framer Motion counter effect */}
         <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-2xl px-5 py-3">
           <div className="text-right">
             <div className="text-xs text-zinc-400">Tono Seleccionado</div>
             <div className="text-lg font-bold text-white">{selected.name}</div>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center font-black text-amber-400">
+          <motion.div
+            key={selected.percentage}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="h-10 w-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center font-black text-amber-400"
+          >
             {selected.percentage}%
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Simulator Vehicle Window Display */}
+      {/* Simulator Vehicle Window Display with Motion Crossfade */}
       <div className="my-8 relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black p-8 text-center min-h-[260px] flex flex-col justify-between">
-        {/* Car outline mockup with interactive glass overlay */}
         <div className="relative mx-auto w-full max-w-2xl py-6">
           <div className="relative h-36 w-full rounded-2xl bg-zinc-800/40 border border-zinc-700/50 p-3 flex items-center justify-center overflow-hidden">
             {/* Interior car view background */}
@@ -128,50 +134,85 @@ export function TintSimulator() {
               </div>
             </div>
 
-            {/* Tint Glass Layer with dynamic opacity */}
-            <div
-              className={cn(
-                "absolute inset-0 transition-all duration-500 flex items-center justify-center backdrop-blur-[0.5px]",
-                selected.opacityClass
-              )}
-            >
-              <div className="relative z-10 text-center px-4 py-2 rounded-lg bg-black/60 border border-white/10 text-white font-mono text-sm font-bold shadow-xl">
-                Vista exterior simulada ({selected.percentage}% VLT)
-              </div>
-            </div>
+            {/* Tint Glass Layer with Framer Motion animated opacity */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selected.percentage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className={cn(
+                  "absolute inset-0 flex items-center justify-center backdrop-blur-[0.5px]",
+                  selected.opacityClass
+                )}
+              >
+                <div className="relative z-10 text-center px-4 py-2 rounded-lg bg-black/60 border border-white/10 text-white font-mono text-sm font-bold shadow-xl">
+                  Vista exterior simulada ({selected.percentage}% VLT)
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* Selected Specs Bar */}
+        {/* Selected Specs Bar with motion transition */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-white/5">
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
               <ShieldCheck className="h-4 w-4 text-emerald-400" /> Rechazo UV
             </div>
-            <div className="text-xl font-bold text-white">{selected.uvRejection}</div>
+            <motion.div
+              key={selected.uvRejection}
+              initial={{ y: 5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="text-xl font-bold text-white"
+            >
+              {selected.uvRejection}
+            </motion.div>
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
               <Flame className="h-4 w-4 text-amber-400" /> Rechazo Calor (IR)
             </div>
-            <div className="text-xl font-bold text-white">{selected.irHeatRejection}</div>
+            <motion.div
+              key={selected.irHeatRejection}
+              initial={{ y: 5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="text-xl font-bold text-white"
+            >
+              {selected.irHeatRejection}
+            </motion.div>
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
               <Eye className="h-4 w-4 text-blue-400" /> Reducción Destello
             </div>
-            <div className="text-xl font-bold text-white">{selected.glareReduction}</div>
+            <motion.div
+              key={selected.glareReduction}
+              initial={{ y: 5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="text-xl font-bold text-white"
+            >
+              {selected.glareReduction}
+            </motion.div>
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
               <CheckCircle2 className="h-4 w-4 text-purple-400" /> Categoría
             </div>
-            <div className="text-sm font-semibold text-zinc-200 truncate">{selected.category}</div>
+            <motion.div
+              key={selected.category}
+              initial={{ y: 5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="text-sm font-semibold text-zinc-200 truncate"
+            >
+              {selected.category}
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Buttons Selector */}
+      {/* Buttons Selector with Framer Motion layoutId pill */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {TINT_OPTIONS.map((item) => {
           const isActive = selected.percentage === item.percentage;
@@ -180,19 +221,28 @@ export function TintSimulator() {
               key={item.percentage}
               onClick={() => setSelected(item)}
               className={cn(
-                "relative flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all cursor-pointer",
+                "relative flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-colors cursor-pointer",
                 isActive
-                  ? "border-amber-400 bg-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white"
+                  ? "border-amber-400 text-white"
                   : "border-white/10 bg-zinc-900/50 hover:bg-zinc-800/50 text-zinc-300"
               )}
             >
+              {/* Framer Motion Sliding Pill Background */}
+              {isActive && (
+                <motion.div
+                  layoutId="activeTintTab"
+                  className="absolute inset-0 rounded-2xl bg-amber-500/15 border border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.25)]"
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                />
+              )}
+
               {item.popular && (
-                <span className="absolute -top-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-black uppercase text-black px-2 py-0.5 rounded-full shadow">
+                <span className="absolute -top-2.5 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-black uppercase text-black px-2 py-0.5 rounded-full shadow">
                   Más Popular
                 </span>
               )}
-              <span className="text-2xl font-black">{item.percentage}%</span>
-              <span className="text-xs font-medium text-zinc-400 mt-1">
+              <span className="relative z-10 text-2xl font-black">{item.percentage}%</span>
+              <span className="relative z-10 text-xs font-medium text-zinc-400 mt-1">
                 {item.name.replace(`${item.percentage}% `, "")}
               </span>
             </button>

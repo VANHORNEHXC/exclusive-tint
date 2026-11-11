@@ -1,32 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { LocaleProvider, useLocale } from '@/context/LocaleContext';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Exclusive Tint | Polarizado Nano-Cerámico & Protección Automotriz",
-  description:
-    "Estudio especializado en polarizado nano-cerámico de alto rechazo térmico, Paint Protection Film (PPF) y Ceramic Coating. Corte computarizado milimétrico.",
-  keywords: [
-    "Exclusive Tint",
-    "polarizado cerámico",
-    "window tint",
-    "PPF",
-    "paint protection film",
-    "rechazo de calor",
-    "nano ceramica",
-    "corte computarizado",
-  ],
-};
+function InnerLayout({ children }: { children: React.ReactNode }) {
+  const { locale, toggleLocale } = useLocale();
+  return (
+    <html
+      lang={locale}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col bg-black text-white">
+        <button
+          onClick={toggleLocale}
+          className="absolute top-4 right-4 bg-amber-500 text-black px-3 py-1 rounded"
+        >
+          EN/ES
+        </button>
+        {children}
+      </body>
+    </html>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -34,11 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-black text-white">{children}</body>
-    </html>
+    <LocaleProvider>
+      <InnerLayout>{children}</InnerLayout>
+    </LocaleProvider>
   );
 }

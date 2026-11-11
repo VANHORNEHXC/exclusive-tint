@@ -17,6 +17,7 @@ import { Particles } from "@/components/magicui/particles";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
+import { Marquee } from "@/components/magicui/marquee";
 
 // Cult UI Components
 import { Spotlight } from "@/components/cultui/spotlight";
@@ -28,6 +29,8 @@ import { TintSimulator } from "@/components/skiperui/tint-simulator";
 import { ComparisonSlider } from "@/components/skiperui/comparison-slider";
 import { PricingCard, PricingPlan } from "@/components/skiperui/pricing-card";
 import { ReviewsSection } from "@/components/skiperui/reviews-section";
+
+import { useLocale } from '@/context/LocaleContext';
 
 const PRICING_PLANS: PricingPlan[] = [
   {
@@ -80,6 +83,7 @@ const PRICING_PLANS: PricingPlan[] = [
 ];
 
 export default function Home() {
+  const { t } = useLocale();
   return (
     <div className="relative min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
       {/* Dynamic Background Particles (Magic UI) */}
@@ -102,21 +106,11 @@ export default function Home() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
-            <a href="#simulador" className="hover:text-amber-400 transition-colors">
-              Simulador
-            </a>
-            <a href="#servicios" className="hover:text-amber-400 transition-colors">
-              Servicios
-            </a>
-            <a href="#comparativa" className="hover:text-amber-400 transition-colors">
-              Tecnología Térmica
-            </a>
-            <a href="#precios" className="hover:text-amber-400 transition-colors">
-              Paquetes
-            </a>
-            <a href="#opiniones" className="hover:text-amber-400 transition-colors">
-              Opiniones
-            </a>
+            <a href="#simulador" className="hover:text-amber-400 transition-colors">{t('nav.simulador')}</a>
+            <a href="#servicios" className="hover:text-amber-400 transition-colors">{t('nav.servicios')}</a>
+            <a href="#comparativa" className="hover:text-amber-400 transition-colors">{t('nav.tecnologia')}</a>
+            <a href="#precios" className="hover:text-amber-400 transition-colors">{t('nav.precios')}</a>
+            <a href="#opiniones" className="hover:text-amber-400 transition-colors">{t('nav.opiniones')}</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -132,12 +126,9 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              <ShimmerButton
-                shimmerColor="#fbbf24"
-                className="px-4 py-2 text-xs font-bold"
-              >
+              <ShimmerButton shimmerColor="#fbbf24" className="px-4 py-2 text-xs font-bold">
                 <span className="flex items-center gap-1.5">
-                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> WhatsApp Directo
+                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> {t('whatsapp.cta')}
                 </span>
               </ShimmerButton>
             </a>
@@ -150,18 +141,17 @@ export default function Home() {
         {/* Nocturnal Bot Live Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>Bot Nocturno 24/7 de WhatsApp Activo</span>
+          <span>{t('badge.bot')}</span>
           <span className="text-zinc-500">•</span>
-          <span className="text-zinc-400">Cotizaciones inmediatas</span>
+          <span className="text-zinc-400">{t('badge.cotizaciones')}</span>
         </div>
 
-        {/* Cult UI Gradient Heading */}
         <GradientHeading size="xl" className="max-w-4xl mx-auto leading-none">
-          Polarizado Cerámico & Protección de Élite para tu Auto
+          {t('hero.heading')}
         </GradientHeading>
 
         <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-          Rechaza hasta un <strong className="text-white">96% del calor infrarrojo</strong> y el <strong className="text-white">99.9% de los rayos UV</strong> con películas nano-cerámicas de grado aeroespacial y corte computarizado.
+          {t('hero.sub')}
         </p>
 
         {/* CTA Buttons with Magic UI & Border Beam */}
@@ -171,12 +161,9 @@ export default function Home() {
             target="_blank"
             rel="noreferrer"
           >
-            <ShimmerButton
-              shimmerColor="#f59e0b"
-              className="px-8 py-4 text-base font-bold shadow-2xl"
-            >
+            <ShimmerButton shimmerColor="#f59e0b" className="px-8 py-4 text-base font-bold shadow-2xl">
               <span className="flex items-center gap-2">
-                Agendar Instalación VIP <ArrowRight className="h-4 w-4" />
+                {t('cta.agendar')} <ArrowRight className="h-4 w-4" />
               </span>
             </ShimmerButton>
           </a>
@@ -185,7 +172,7 @@ export default function Home() {
             href="#simulador"
             className="flex items-center gap-2 px-6 py-4 rounded-full border border-white/15 bg-white/5 text-sm font-bold text-zinc-200 hover:bg-white/10 hover:text-white transition-all backdrop-blur"
           >
-            <Sun className="h-4 w-4 text-amber-400" /> Probar Tonalidades (5% - 70%)
+            <Sun className="h-4 w-4 text-amber-400" /> {t('cta.probar')}
           </a>
         </div>
 
@@ -194,31 +181,56 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Award className="h-8 w-8 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-bold text-white">Garantía De Por Vida</div>
-              <div className="text-xs text-zinc-500">Cero burbujas o tonos morados</div>
+              <div className="text-sm font-bold text-white">{t('trust.garantia')}</div>
+              <div className="text-xs text-zinc-500">{t('trust.garantiaDesc')}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Flame className="h-8 w-8 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-bold text-white">-15°C Menos Calor</div>
-              <div className="text-xs text-zinc-500">Máximo confort en cabina</div>
+              <div className="text-sm font-bold text-white">{t('trust.calor')}</div>
+              <div className="text-xs text-zinc-500">{t('trust.calorDesc')}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Car className="h-8 w-8 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-bold text-white">Plotter de Precisión</div>
-              <div className="text-xs text-zinc-500">Sin navajas en tus vidrios</div>
+              <div className="text-sm font-bold text-white">{t('trust.precision')}</div>
+              <div className="text-xs text-zinc-500">{t('trust.precisionDesc')}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Clock className="h-8 w-8 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-bold text-white">Instalación en 90 min</div>
-              <div className="text-xs text-zinc-500">Bahía sellada climatizada</div>
+              <div className="text-sm font-bold text-white">{t('trust.tiempo')}</div>
+              <div className="text-xs text-zinc-500">{t('trust.tiempoDesc')}</div>
             </div>
           </div>
+        </div>
+
+        {/* Vehicle Brands Marquee (Magic UI) */}
+        <div className="mt-14 w-full max-w-5xl overflow-hidden py-4 border-y border-white/5">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3 text-center">
+            {t('marquee.title')}
+          </div>
+          <Marquee pauseOnHover className="[--duration:25s]">
+            {[
+              "PORSCHE",
+              "TESLA",
+              "BMW M-SERIES",
+              "MERCEDES-BENZ",
+              "AUDI SPORT",
+              "RANGE ROVER",
+              "LAMBORGHINI",
+              "FERRARI",
+              "CORVETTE",
+              "LEXUS F-SPORT",
+            ].map((brand) => (
+              <span key={brand} className="mx-4 text-sm font-black tracking-widest text-zinc-400 hover:text-amber-400 transition-colors">
+                {brand}
+              </span>
+            ))}
+          </Marquee>
         </div>
       </section>
 
@@ -230,31 +242,19 @@ export default function Home() {
       {/* Before / After Thermal Comparison Slider (Skiper UI) */}
       <section id="comparativa" className="py-20 px-6 max-w-5xl mx-auto scroll-mt-24 text-center">
         <div className="mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Diferencia Infrarroja
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
-            Siente el cambio antes y después de la instalación
-          </h2>
-          <p className="text-sm text-zinc-400 mt-2">
-            Desliza el divisor interactivo para comparar la penetración térmica y la protección del interior.
-          </p>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Diferencia Infrarroja</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Siente el cambio antes y después de la instalación</h2>
+          <p className="text-sm text-zinc-400 mt-2">Desliza el divisor interactivo para comparar la penetración térmica y la protección del interior.</p>
         </div>
-
         <ComparisonSlider />
       </section>
 
       {/* Services Bento Grid (Magic UI) */}
       <section id="servicios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
         <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Especialidades Exclusive Tint
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
-            Tratamientos Estéticos y de Protección Vehicular
-          </h2>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Especialidades Exclusive Tint</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Tratamientos Estéticos y de Protección Vehicular</h2>
         </div>
-
         <BentoGrid>
           <BentoCard
             name="Nano-Ceramic Window Tint"
@@ -263,9 +263,7 @@ export default function Home() {
             cta="Saber más"
             href="#simulador"
             className="md:col-span-2"
-            background={
-              <div className="absolute inset-0 bg-gradient-to-tr from-amber-950/30 via-zinc-900 to-black" />
-            }
+            background={<div className="absolute inset-0 bg-gradient-to-tr from-amber-950/30 via-zinc-900 to-black" />}
           />
           <BentoCard
             name="Paint Protection Film (PPF)"
@@ -290,9 +288,7 @@ export default function Home() {
             cta="Ver tecnología"
             href="#simulador"
             className="md:col-span-2"
-            background={
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black" />
-            }
+            background={<div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black" />}
           />
         </BentoGrid>
       </section>
@@ -300,21 +296,40 @@ export default function Home() {
       {/* Pricing Packages (Skiper UI) */}
       <section id="precios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Inversión Transparente
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
-            Paquetes de Instalación Certificada
-          </h2>
-          <p className="text-sm text-zinc-400 mt-2">
-            Elige el nivel de rendimiento que mejor se adapte a tu vehículo y estilo de vida.
-          </p>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Inversión Transparente</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Paquetes de Instalación Certificada</h2>
+          <p className="text-sm text-zinc-400 mt-2">Elige el nivel de rendimiento que mejor se adapte a tu vehículo y estilo de vida.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {PRICING_PLANS.map((plan) => (
             <PricingCard key={plan.id} plan={plan} />
           ))}
+        </div>
+
+        {/* Vehicle Brands Marquee (Magic UI) */}
+        <div className="mt-14 w-full max-w-5xl overflow-hidden py-4 border-y border-white/5">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3 text-center">
+            {t('marquee.title')}
+          </div>
+          <Marquee pauseOnHover className="[--duration:25s]">
+            {[
+              "PORSCHE",
+              "TESLA",
+              "BMW M-SERIES",
+              "MERCEDES-BENZ",
+              "AUDI SPORT",
+              "RANGE ROVER",
+              "LAMBORGHINI",
+              "FERRARI",
+              "CORVETTE",
+              "LEXUS F-SPORT",
+            ].map((brand) => (
+              <span key={brand} className="mx-4 text-sm font-black tracking-widest text-zinc-400 hover:text-amber-400 transition-colors">
+                {brand}
+              </span>
+            ))}
+          </Marquee>
         </div>
       </section>
 
@@ -328,14 +343,10 @@ export default function Home() {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="space-y-3 text-center md:text-left">
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" /> Asistente Nocturno 24/7
+                <span className="h-2 w-2 rounded-full bg-emerald-400" /> {t('badge.bot')}
               </div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">
-                ¿Tienes una consulta tarde en la noche?
-              </h3>
-              <p className="text-sm text-zinc-400 max-w-lg">
-                Nuestro bot de WhatsApp con IA procesa tu cotización de madrugada y asegura tu turno preferencial a primera hora de la mañana.
-              </p>
+              <h3 className="text-2xl sm:text-3xl font-black text-white">{t('banner.title')}</h3>
+              <p className="text-sm text-zinc-400 max-w-lg">{t('banner.sub')}</p>
             </div>
 
             <a
@@ -344,11 +355,8 @@ export default function Home() {
               rel="noreferrer"
               className="shrink-0"
             >
-              <ShimmerButton
-                shimmerColor="#ffffff"
-                className="px-6 py-3.5 text-sm font-bold bg-amber-500 text-black"
-              >
-                Escribir al Bot de WhatsApp
+              <ShimmerButton shimmerColor="#ffffff" className="px-6 py-3.5 text-sm font-bold bg-amber-500 text-black">
+                {t('banner.cta')}
               </ShimmerButton>
             </a>
           </div>
@@ -365,18 +373,12 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#simulador" className="hover:text-white transition-colors">
-              Simulador
-            </a>
-            <a href="#servicios" className="hover:text-white transition-colors">
-              Servicios
-            </a>
-            <Link href="/admin" className="hover:text-white transition-colors">
-              Portal del Equipo
-            </Link>
+            <a href="#simulador" className="hover:text-white transition-colors">{t('nav.simulador')}</a>
+            <a href="#servicios" className="hover:text-white transition-colors">{t('nav.servicios')}</a>
+            <Link href="/admin" className="hover:text-white transition-colors">Portal del Equipo</Link>
           </div>
 
-          <p>© 2026 Exclusive Tint. Todos los derechos reservados.</p>
+          <p>{t('footer.copy')}</p>
         </div>
       </footer>
     </div>
