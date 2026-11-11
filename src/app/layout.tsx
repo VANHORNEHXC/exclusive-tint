@@ -1,11 +1,13 @@
+'use client';
 import { LocaleProvider, useLocale } from '@/context/LocaleContext';
+import React from 'react';
 
 function InnerLayout({ children }: { children: React.ReactNode }) {
   const { locale, toggleLocale } = useLocale();
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col bg-black text-white">
         <button

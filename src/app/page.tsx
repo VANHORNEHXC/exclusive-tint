@@ -1,4 +1,5 @@
-import Link from "next/link";
+'use client';
+
 import {
   Shield,
   Sun,
@@ -31,6 +32,7 @@ import { PricingCard, PricingPlan } from "@/components/skiperui/pricing-card";
 import { ReviewsSection } from "@/components/skiperui/reviews-section";
 
 import { useLocale } from '@/context/LocaleContext';
+import Link from 'next/link';
 
 const PRICING_PLANS: PricingPlan[] = [
   {
