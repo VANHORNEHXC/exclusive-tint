@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Exclusive Tint
 
-## Getting Started
+Sitio web y portal interno construidos con Next.js 16.
 
-First, run the development server:
+## Inicio local
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Configura las variables de `.env.local` antes de usar las integraciones. La página pública está en `/` y el portal interno en `/admin`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Base de datos y portal
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`DATABASE_URL` o `DATABASE_URL_POOLED` conecta PostgreSQL. Ejecuta `npm run db:migrate` para crear las tablas de órdenes y reseñas. La migración no agrega clientes ni reseñas ficticias.
 
-## Learn More
+Una versión anterior de la migración insertó dos órdenes ficticias (`ET-1001`, `ET-1002`) y tres reseñas de muestra en algunas bases existentes. El portal oculta las dos órdenes solo cuando coinciden sus nombres y teléfonos de ejemplo; revisa esos registros en la base antes de eliminarlos. La web pública consulta reseñas aprobadas y filtra las tres muestras conocidas.
 
-To learn more about Next.js, take a look at the following resources:
+El portal requiere `ADMIN_USERNAME` y `ADMIN_PASSWORD` (mínimo 16 caracteres), y debe servirse sobre HTTPS. Muestra órdenes reales y guarda los cambios de estado en PostgreSQL. Si faltan estas variables, devuelve 503; sin credenciales válidas, devuelve 401. El portal no incluye todavía gestión de reseñas, leads ni carga de fotos.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## WhatsApp
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Los enlaces de cotización usan el número proporcionado por el negocio (`+1 323 815 6876`). Puedes cambiarlo mediante `NEXT_PUBLIC_WHATSAPP_NUMBER`, con código de país y solo dígitos.
 
-## Deploy on Vercel
+El webhook `/api/webhook/whatsapp` necesita `WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` y `WHATSAPP_GRAPH_API_VERSION`. Valida la firma de Meta y responde a mensajes de texto fuera del horario de 09:00 a 19:00, hora de Panamá. No guarda leads en la base de datos ni calcula cotizaciones automáticas.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Comprobaciones
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```

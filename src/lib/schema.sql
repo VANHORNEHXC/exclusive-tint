@@ -130,3 +130,18 @@ CREATE TRIGGER trg_orders_number
   BEFORE INSERT ON orders
   FOR EACH ROW
   EXECUTE FUNCTION generate_order_number();
+
+-- Keep the sequence ahead of any existing ET numbers after imports or old seed data.
+SELECT setval(
+  'order_number_seq',
+  GREATEST(
+    1001,
+    (SELECT last_value + CASE WHEN is_called THEN 1 ELSE 0 END FROM order_number_seq),
+    COALESCE(
+      (SELECT MAX(SUBSTRING(order_number FROM 4)::BIGINT) + 1
+       FROM orders WHERE order_number ~ '^ET-[0-9]+$'),
+      1001
+    )
+  ),
+  false
+);

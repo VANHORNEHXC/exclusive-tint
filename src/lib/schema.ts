@@ -241,12 +241,22 @@ export async function createReview(data: NewReview): Promise<Review> {
  * Obtiene las reseñas aprobadas para mostrar en la web pública.
  */
 export async function getApprovedReviews(limit = 20): Promise<Review[]> {
-  return await sql<Review[]>`
+  const reviews = await sql<Review[]>`
     SELECT * FROM reviews
     WHERE is_approved = true
     ORDER BY created_at DESC
-    LIMIT ${limit}
+    LIMIT ${Math.min(Math.max(limit, 1) + 3, 103)}
   `;
+  // Earlier migrations inserted three fictional reviews. Do not publish them.
+  const demoPrefixes: Record<string, string> = {
+    "Roberto Valenzuela": "La diferencia térmica con el Nano-Ceramic en el M3 es increíble.",
+    "Valeria Gómez": "Excelente atención en Exclusive Tint. Me asesoraron con el porcentaje legal para mi Macan",
+    "Alejandro Peña": "Polaricé mi camioneta completa incluyendo el panorámico en 70%",
+  };
+  return reviews.filter((review) => {
+    const prefix = demoPrefixes[review.client_name];
+    return !prefix || !review.comment.startsWith(prefix);
+  }).slice(0, limit);
 }
 
 /**
@@ -274,7 +284,7 @@ export async function getReviewStats(): Promise<ReviewStats> {
     sum += row.rating * count;
   }
 
-  const averageRating = total > 0 ? parseFloat((sum / total).toFixed(1)) : 5.0;
+  const averageRating = total > 0 ? parseFloat((sum / total).toFixed(1)) : 0;
 
   return {
     total,

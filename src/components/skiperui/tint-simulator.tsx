@@ -27,7 +27,7 @@ const TINT_OPTIONS: TintOption[] = [
     irHeatRejection: "96%",
     glareReduction: "94%",
     opacityClass: "bg-black/95",
-    legalNote: "Ideal para vidrios traseros y laterales posteriores.",
+    legalNote: "Consulta la normativa local antes de elegir esta tonalidad.",
     description: "Bloqueo visual casi total del exterior hacia adentro. Máxima discreción.",
   },
   {
@@ -39,7 +39,7 @@ const TINT_OPTIONS: TintOption[] = [
     glareReduction: "82%",
     opacityClass: "bg-black/80",
     popular: true,
-    legalNote: "Iguala la tonalidad de privacidad original de fábrica (SUV/Pickups).",
+    legalNote: "Consulta la normativa local antes de elegir esta tonalidad.",
     description: "El equilibrio perfecto entre estética agresiva, visibilidad y privacidad.",
   },
   {
@@ -50,7 +50,7 @@ const TINT_OPTIONS: TintOption[] = [
     irHeatRejection: "88%",
     glareReduction: "65%",
     opacityClass: "bg-black/65",
-    legalNote: "Tonalidad estándar permitida en la mayoría de normativas vehiculares.",
+    legalNote: "Consulta la normativa local antes de elegir esta tonalidad.",
     description: "Excelente visibilidad nocturna manteniendo una apariencia elegante y deportiva.",
   },
   {
@@ -61,7 +61,7 @@ const TINT_OPTIONS: TintOption[] = [
     irHeatRejection: "84%",
     glareReduction: "48%",
     opacityClass: "bg-black/45",
-    legalNote: "Aprobado para conductores que buscan cero problemas de visión nocturna.",
+    legalNote: "Consulta la normativa local antes de elegir esta tonalidad.",
     description: "Protección térmica notable con oscurecimiento apenas perceptible.",
   },
   {
@@ -72,7 +72,7 @@ const TINT_OPTIONS: TintOption[] = [
     irHeatRejection: "95%",
     glareReduction: "25%",
     opacityClass: "bg-blue-950/20",
-    legalNote: "Especialmente diseñado para parabrisas frontales completos.",
+    legalNote: "Consulta la normativa local antes de elegir esta tonalidad.",
     description: "Rechaza el calor extremo sin alterar la visibilidad ni la estética original.",
   },
 ];
@@ -91,7 +91,7 @@ export function TintSimulator() {
             Elige el nivel de oscuridad para tu auto
           </h2>
           <p className="text-sm text-zinc-400 mt-1">
-            Compara el porcentaje de transmisión luminosa (VLT) y el rechazo térmico real.
+            Visualización orientativa de tonalidad. Confirma las prestaciones con la ficha técnica de la película.
           </p>
         </div>
 

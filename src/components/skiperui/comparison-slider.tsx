@@ -12,7 +12,7 @@ interface ComparisonSliderProps {
 export function ComparisonSlider({
   className,
   beforeLabel = "Sin Polarizado (Calor & UV)",
-  afterLabel = "Exclusive Ceramic Tint (99% UV / -15°C)",
+  afterLabel = "Con polarizado cerámico",
 }: ComparisonSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export function ComparisonSlider({
             Desgaste del interior por radiación solar
           </h4>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mt-1 mx-auto">
-            El 90% de los rayos infrarrojos penetran la cabina aumentando el calor interno hasta 60°C.
+            La luz solar puede elevar la temperatura y desgastar los materiales del interior.
           </p>
         </div>
         <span className="absolute bottom-4 left-4 rounded-lg bg-black/60 px-3 py-1 text-xs font-bold text-zinc-300 backdrop-blur">
@@ -79,7 +79,7 @@ export function ComparisonSlider({
             Cabina fresca, protegida y con privacidad VIP
           </h4>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mt-1 mx-auto">
-            Protección de tapicería, corte térmico de hasta 96% de radiación infrarroja y máxima nitidez visual.
+            Una película adecuada puede reducir la entrada de calor y proteger el interior.
           </p>
         </div>
         <span className="absolute bottom-4 right-4 rounded-lg bg-amber-500/80 px-3 py-1 text-xs font-bold text-black backdrop-blur">

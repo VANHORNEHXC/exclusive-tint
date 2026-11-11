@@ -3,7 +3,7 @@
 import React, { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/utils";
 
-export interface ShimmerButtonProps extends ComponentPropsWithoutRef<"button"> {
+export interface ShimmerButtonProps extends ComponentPropsWithoutRef<"span"> {
   shimmerColor?: string;
   shimmerSize?: string;
   borderRadius?: string;
@@ -13,7 +13,7 @@ export interface ShimmerButtonProps extends ComponentPropsWithoutRef<"button"> {
   children?: React.ReactNode;
 }
 
-export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
+export const ShimmerButton = React.forwardRef<HTMLSpanElement, ShimmerButtonProps>(
   (
     {
       shimmerColor = "#ffffff",
@@ -28,7 +28,7 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
     ref
   ) => {
     return (
-      <button
+      <span
         style={
           {
             "--spread": "90deg",
@@ -64,7 +64,7 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
         <div className="absolute [border-radius:var(--radius)] inset-[var(--cut)] -z-20 bg-zinc-950/90 backdrop-blur-md" />
 
         {children}
-      </button>
+      </span>
     );
   }
 );

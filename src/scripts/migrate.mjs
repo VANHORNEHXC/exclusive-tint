@@ -134,82 +134,22 @@ async function runMigration() {
         EXECUTE FUNCTION generate_order_number();
     `;
 
-    // 6. Verificar y sembrar datos iniciales si la tabla está vacía
-    const [{ count: orderCount }] = await sql`SELECT COUNT(*)::text as count FROM orders`;
-
-    if (parseInt(orderCount, 10) === 0) {
-      console.log("  🌱 Insertando órdenes iniciales de prueba...");
-      const [order1] = await sql`
-        INSERT INTO orders (
-          order_number, client_name, client_phone, client_email,
-          vehicle_make, vehicle_model, vehicle_year, vehicle_color,
-          service_type, shade, status, scheduled_at, total_price, deposit_paid, notes, source
-        ) VALUES (
-          'ET-1001', 'Carlos Mendoza', '+1 (829) 555-0192', 'carlos.m@example.com',
-          'Tesla', 'Model Y', 2024, 'Blanco Perlado',
-          'Nano-Ceramic IR Completo', '20% laterales / 70% parabrisas',
-          'in_progress', now() + interval '2 hours', 399.00, 100.00,
-          'Cliente solicitó especial cuidado en desempañador trasero.', 'whatsapp_bot'
-        ) RETURNING id;
-      `;
-
-      const [order2] = await sql`
-        INSERT INTO orders (
-          order_number, client_name, client_phone, client_email,
-          vehicle_make, vehicle_model, vehicle_year, vehicle_color,
-          service_type, shade, status, scheduled_at, total_price, deposit_paid, notes, source
-        ) VALUES (
-          'ET-1002', 'Roberto Valenzuela', '+1 (809) 555-8371', 'roberto.v@example.com',
-          'BMW', 'M3 Competition', 2023, 'Negro Zafiro',
-          'PPF Full Front + Ceramic Tint', '5% Limo trasero / 20% laterales',
-          'ready', now() - interval '1 day', 1199.00, 300.00,
-          'Vehículo listo para entrega y fotos de portafolio.', 'web'
-        ) RETURNING id;
-      `;
-
-      console.log("  🌱 Insertando reseñas de clientes verificadas...");
-      await sql`
-        INSERT INTO reviews (
-          order_id, client_name, rating, comment, vehicle_info, service_rendered, photos, is_verified, is_approved, likes
-        ) VALUES
-        (
-          ${order2.id},
-          'Roberto Valenzuela',
-          5,
-          'La diferencia térmica con el Nano-Ceramic en el M3 es increíble. Dejarlo al sol y que la cabina no hierva no tiene precio. El corte computarizado quedó milimétrico.',
-          'BMW M3 Competition 2023',
-          'PPF Full Front + Ceramic Tint 20%',
-          ARRAY['portfolio/bmw-m3-ceramic-tint.jpg'],
-          true,
-          true,
-          14
+    // Existing databases may already contain ET numbers from earlier imports.
+    await sql`
+      SELECT setval(
+        'order_number_seq',
+        GREATEST(
+          1001,
+          (SELECT last_value + CASE WHEN is_called THEN 1 ELSE 0 END FROM order_number_seq),
+          COALESCE(
+            (SELECT MAX(SUBSTRING(order_number FROM 4)::BIGINT) + 1
+             FROM orders WHERE order_number ~ '^ET-[0-9]+$'),
+            1001
+          )
         ),
-        (
-          ${order1.id},
-          'Valeria Gómez',
-          5,
-          'Excelente atención en Exclusive Tint. Me asesoraron con el porcentaje legal para mi Macan y el bot nocturno de WhatsApp me respondió de inmediato a la medianoche.',
-          'Porsche Macan GTS 2024',
-          'Nano-Ceramic IR 35%',
-          ARRAY['portfolio/porsche-macan-ppf-complete.jpg'],
-          true,
-          true,
-          9
-        ),
-        (
-          NULL,
-          'Alejandro Peña',
-          5,
-          'Polaricé mi camioneta completa incluyendo el panorámico en 70% transparente térmico. La visibilidad de noche es perfecta y el sol ya no quema en los brazos.',
-          'Ford Raptor 2023',
-          'Nano-Ceramic IR 70% Parabrisas + 20% Laterales',
-          ARRAY['portfolio/tesla-model-y-nano70.jpg'],
-          false,
-          true,
-          21
-        );
-      `;
-    }
+        false
+      )
+    `;
 
     console.log("✅ [Migration] Esquema, tablas, índices y triggers creados exitosamente en Neon PostgreSQL.");
     await sql.end();

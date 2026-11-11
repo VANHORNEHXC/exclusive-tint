@@ -1,75 +1,52 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Star, ShieldCheck, ThumbsUp, Car } from "lucide-react";
-import { Review } from "@/lib/schema";
 
-const FALLBACK_REVIEWS: Review[] = [
-  {
-    id: "rev-1",
-    order_id: null,
-    client_name: "Roberto Valenzuela",
-    rating: 5,
-    comment:
-      "La diferencia térmica con el Nano-Ceramic en el M3 es increíble. Dejarlo al sol y que la cabina no hierva no tiene precio. El corte computarizado quedó milimétrico.",
-    vehicle_info: "BMW M3 Competition 2023",
-    service_rendered: "PPF Full Front + Ceramic Tint 20%",
-    photos: ["portfolio/bmw-m3-ceramic-tint.jpg"],
-    is_verified: true,
-    is_approved: true,
-    likes: 14,
-    created_at: new Date("2026-11-01"),
-    updated_at: new Date("2026-11-01"),
-  },
-  {
-    id: "rev-2",
-    order_id: null,
-    client_name: "Valeria Gómez",
-    rating: 5,
-    comment:
-      "Excelente atención en Exclusive Tint. Me asesoraron con el porcentaje legal para mi Macan y el bot nocturno de WhatsApp me respondió de inmediato a la medianoche.",
-    vehicle_info: "Porsche Macan GTS 2024",
-    service_rendered: "Nano-Ceramic IR 35%",
-    photos: ["portfolio/porsche-macan-ppf-complete.jpg"],
-    is_verified: true,
-    is_approved: true,
-    likes: 9,
-    created_at: new Date("2026-11-04"),
-    updated_at: new Date("2026-11-04"),
-  },
-  {
-    id: "rev-3",
-    order_id: null,
-    client_name: "Alejandro Peña",
-    rating: 5,
-    comment:
-      "Polaricé mi camioneta completa incluyendo el panorámico en 70% transparente térmico. La visibilidad de noche es perfecta y el sol ya no quema en los brazos.",
-    vehicle_info: "Ford Raptor 2023",
-    service_rendered: "Nano-Ceramic IR 70% Parabrisas + 20% Laterales",
-    photos: ["portfolio/tesla-model-y-nano70.jpg"],
-    is_verified: true,
-    is_approved: true,
-    likes: 21,
-    created_at: new Date("2026-11-08"),
-    updated_at: new Date("2026-11-08"),
-  },
-];
+interface PublicReview {
+  id: string;
+  client_name: string;
+  rating: number;
+  comment: string;
+  vehicle_info: string | null;
+  service_rendered: string | null;
+  is_verified: boolean;
+  likes: number;
+}
 
-export function ReviewsSection({ reviews = FALLBACK_REVIEWS }: { reviews?: Review[] }) {
+export function ReviewsSection() {
+  const [reviews, setReviews] = useState<PublicReview[] | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/reviews", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Reviews unavailable");
+        return response.json() as Promise<{ reviews: PublicReview[] }>;
+      })
+      .then((data) => setReviews(data.reviews))
+      .catch(() => {
+        if (!controller.signal.aborted) setReviews([]);
+      });
+    return () => controller.abort();
+  }, []);
+
   return (
     <section id="opiniones" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
       <div className="text-center mb-14">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
-          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> 4.9/5 Satisfacción Verificada
+          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> Opiniones
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          Experiencias de Clientes Reales
+          Opiniones de Clientes
         </h2>
         <p className="text-sm text-zinc-400 mt-2 max-w-xl mx-auto">
-          Opiniones directas registradas y verificadas en nuestra base de datos Neon PostgreSQL.
+          {reviews === null ? "Cargando opiniones..." : reviews.length > 0 ? "Experiencias compartidas por nuestros clientes." : "Próximamente publicaremos opiniones de nuestros clientes."}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {reviews.map((rev) => (
+        {reviews?.map((rev) => (
           <div
             key={rev.id}
             className="flex flex-col justify-between rounded-3xl border border-white/10 bg-zinc-950/80 p-6 backdrop-blur-md shadow-xl transition-all hover:border-white/20"

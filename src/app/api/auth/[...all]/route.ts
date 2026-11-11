@@ -1,8 +1,11 @@
-import { auth } from "@/lib/auth";
-import { toNextJsHandler } from "better-auth/next-js";
+import { NextResponse } from "next/server";
 
-/**
- * Endpoint unificado de Better Auth para Next.js App Router.
- * Maneja los métodos GET y POST para sign-in, sign-up, session, OAuth, etc.
- */
-export const { GET, POST } = toNextJsHandler(auth);
+// The former Better Auth endpoint had no database adapter or configured secret.
+// Keep it closed until a complete authentication flow is installed.
+const unavailable = () => NextResponse.json(
+  { error: "Autenticación no configurada" },
+  { status: 503 }
+);
+
+export const GET = unavailable;
+export const POST = unavailable;

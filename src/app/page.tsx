@@ -33,6 +33,7 @@ import { ReviewsSection } from "@/components/skiperui/reviews-section";
 
 import { useLocale } from '@/context/LocaleContext';
 import Link from 'next/link';
+import { whatsappUrl } from '@/lib/contact';
 
 const PRICING_PLANS: PricingPlan[] = [
   {
@@ -48,7 +49,7 @@ const PRICING_PLANS: PricingPlan[] = [
       "Corte computarizado a la medida",
     ],
     cta: "Cotizar Carbon",
-    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20Carbon%20Series",
+    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar Carbon Series"),
   },
   {
     id: "ceramic-ir",
@@ -65,7 +66,7 @@ const PRICING_PLANS: PricingPlan[] = [
       "Incluye visera de parabrisas de cortesía",
     ],
     cta: "Cotizar Nano-Ceramic",
-    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20el%20paquete%20Nano-Ceramic%20IR",
+    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar el paquete Nano-Ceramic IR"),
   },
   {
     id: "ppf-ultimate",
@@ -80,7 +81,7 @@ const PRICING_PLANS: PricingPlan[] = [
       "Garantía integral de 10 años",
     ],
     cta: "Cotizar Protección Total",
-    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20Ceramic%20plus%20PPF",
+    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar Ceramic plus PPF"),
   },
 ];
 
@@ -116,15 +117,8 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/admin"
-              className="text-xs font-semibold text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 transition-colors"
-            >
-              Portal Interno
-            </Link>
-
             <a
-              href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20un%20servicio"
+              href={whatsappUrl("Hola Exclusive Tint, deseo cotizar un servicio")}
               target="_blank"
               rel="noreferrer"
             >
@@ -140,7 +134,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center">
-        {/* Nocturnal Bot Live Badge */}
+        {/* WhatsApp contact badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
           <span>{t('badge.bot')}</span>
@@ -159,7 +153,7 @@ export default function Home() {
         {/* CTA Buttons with Magic UI & Border Beam */}
         <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
           <a
-            href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20agendar%20mi%20cita"
+            href={whatsappUrl("Hola Exclusive Tint, deseo agendar mi cita")}
             target="_blank"
             rel="noreferrer"
           >
@@ -272,7 +266,7 @@ export default function Home() {
             description="Blindaje transparente autorregenerable de uretano contra impactos de piedras de carretera, gravilla e insectos."
             Icon={Shield}
             cta="Cotizar PPF"
-            href="https://wa.me/?text=Cotizar%20PPF"
+            href={whatsappUrl("Cotizar PPF")}
             className="md:col-span-1"
           />
           <BentoCard
@@ -280,7 +274,7 @@ export default function Home() {
             description="Sellado de cristales y carrocería con brillo hidrofóbico efecto espejo de ultra larga duración."
             Icon={Sparkles}
             cta="Ver detalles"
-            href="https://wa.me/?text=Cotizar%20Ceramic%20Coating"
+            href={whatsappUrl("Cotizar Ceramic Coating")}
             className="md:col-span-1"
           />
           <BentoCard
@@ -335,10 +329,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Real Customer Reviews from Neon DB (Skiper UI) */}
+      {/* Customer reviews */}
       <ReviewsSection />
 
-      {/* WhatsApp Nocturno Interactive Banner */}
+      {/* WhatsApp contact banner */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
         <GlowCard glowColor="amber" className="p-8 sm:p-12 relative overflow-hidden">
           <BorderBeam size={300} duration={12} colorFrom="#f59e0b" colorTo="#eab308" />
@@ -352,7 +346,7 @@ export default function Home() {
             </div>
 
             <a
-              href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20quiero%20cotizar%20un%20servicio"
+              href={whatsappUrl("Hola Exclusive Tint, quiero cotizar un servicio")}
               target="_blank"
               rel="noreferrer"
               className="shrink-0"
@@ -377,7 +371,6 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="#simulador" className="hover:text-white transition-colors">{t('nav.simulador')}</a>
             <a href="#servicios" className="hover:text-white transition-colors">{t('nav.servicios')}</a>
-            <Link href="/admin" className="hover:text-white transition-colors">Portal del Equipo</Link>
           </div>
 
           <p>{t('footer.copy')}</p>

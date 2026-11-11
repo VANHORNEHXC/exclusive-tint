@@ -1,125 +1,108 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * Webhook para el bot de WhatsApp (Nocturno / Lead Triage) de Exclusive Tint.
- * 
- * 1. GET: Verificación del Webhook (compatible con Meta WhatsApp Cloud API / Twilio).
- * 2. POST: Recepción de mensajes entrantes y automatización nocturna de cotizaciones y citas.
- */
-
-// Token de verificación configurable en variables de entorno o fallback seguro
-const VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || "exclusive_tint_wa_token_2026";
-
-/**
- * GET: Handshake de verificación de Meta / WhatsApp API
- */
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-
-  const mode = searchParams.get("hub.mode");
-  const token = searchParams.get("hub.verify_token");
-  const challenge = searchParams.get("hub.challenge");
-
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("[WhatsApp Webhook] Handshake verificado exitosamente.");
-    return new NextResponse(challenge, { status: 200 });
-  }
-
-  return NextResponse.json(
-    { error: "Forbidden: Token de verificación inválido" },
-    { status: 403 }
-  );
+function validSignature(rawBody: string, signature: string | null, secret: string): boolean {
+  if (!signature || !/^sha256=[a-f0-9]{64}$/i.test(signature)) return false;
+  const expected = createHmac("sha256", secret).update(rawBody).digest();
+  const received = Buffer.from(signature.slice(7), "hex");
+  return received.length === expected.length && timingSafeEqual(received, expected);
 }
 
-/**
- * Determina si la hora actual corresponde al horario nocturno (fuera de oficina, ej: 7:00 PM - 8:30 AM)
- */
 function isNightTime(): boolean {
-  const now = new Date();
-  const hours = now.getHours();
-  // Horario nocturno: después de las 19:00 (7 PM) o antes de las 9:00 AM
-  return hours >= 19 || hours < 9;
+  const hour = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Panama",
+      hour: "2-digit",
+      hourCycle: "h23",
+    }).format(new Date())
+  );
+  return hour >= 19 || hour < 9;
 }
 
-/**
- * Genera una respuesta nocturna automatizada personalizada
- */
-function generateNocturnalReply(senderName: string, messageBody: string): string {
-  const lowerMsg = messageBody.toLowerCase();
+function generateReply(name: string): string {
+  return `¡Hola ${name || "cliente"}! Gracias por escribir a Exclusive Tint. Nuestro taller está cerrado en este momento. Para preparar tu cotización, indícanos la marca, el modelo y el año de tu vehículo, el servicio que deseas y la tonalidad preferida. Te responderemos en horario de atención.`;
+}
 
-  let serviceMention = "polarizado cerámico, PPF o wrap";
-  if (lowerMsg.includes("tint") || lowerMsg.includes("polarizado") || lowerMsg.includes("papel")) {
-    serviceMention = "polarizado cerámico de alta reducción térmica";
-  } else if (lowerMsg.includes("ppf") || lowerMsg.includes("proteccion")) {
-    serviceMention = "Paint Protection Film (PPF)";
-  } else if (lowerMsg.includes("ceramico") || lowerMsg.includes("ceramic coating")) {
-    serviceMention = "Ceramic Coating para pintura y cristales";
+export async function GET(req: NextRequest) {
+  const verifyToken = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+  if (!verifyToken) return NextResponse.json({ error: "Webhook no configurado" }, { status: 503 });
+
+  const params = req.nextUrl.searchParams;
+  if (
+    params.get("hub.mode") === "subscribe" &&
+    params.get("hub.verify_token") === verifyToken &&
+    params.get("hub.challenge")
+  ) {
+    return new NextResponse(params.get("hub.challenge"), { status: 200 });
+  }
+  return NextResponse.json({ error: "Verificación inválida" }, { status: 403 });
+}
+
+export async function POST(req: NextRequest) {
+  const appSecret = process.env.WHATSAPP_APP_SECRET;
+  if (!appSecret) return NextResponse.json({ error: "Webhook no configurado" }, { status: 503 });
+
+  const rawBody = await req.text();
+  if (Buffer.byteLength(rawBody) > 1024 * 1024) {
+    return NextResponse.json({ error: "Payload demasiado grande" }, { status: 413 });
+  }
+  if (!validSignature(rawBody, req.headers.get("x-hub-signature-256"), appSecret)) {
+    return NextResponse.json({ error: "Firma inválida" }, { status: 401 });
   }
 
-  return (
-    `¡Hola ${senderName || "amigo"}! 🌙 Gracias por escribir a Exclusive Tint.\n\n` +
-    `En este momento nuestro taller está cerrado, pero nuestro bot nocturno ya registró tu consulta sobre *${serviceMention}*.\n\n` +
-    `🚗 Para avanzar con tu cotización exacta al abrir, por favor indícanos:\n` +
-    `1. Marca, modelo y año de tu vehículo.\n` +
-    `2. Servicio deseado (Parabrisas, laterales/trasero, o completo).\n` +
-    `3. Tonalidad preferida (5%, 20%, 35%, 50% o 70% transparente térmico).\n\n` +
-    `¡Te responderemos a primera hora con tu presupuesto prioritario!`
-  );
-}
-
-/**
- * POST: Procesa los mensajes recibidos
- */
-export async function POST(req: NextRequest) {
+  let payload: {
+    entry?: Array<{ changes?: Array<{ value?: {
+      messages?: Array<{ id?: string; from?: string; type?: string; text?: { body?: string } }>;
+      contacts?: Array<{ profile?: { name?: string } }>;
+    } }> }>;
+  };
   try {
-    const body = await req.json();
+    payload = JSON.parse(rawBody);
+  } catch {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  if (!payload || typeof payload !== "object") {
+    return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+  }
 
-    // Log para depuración
-    console.log("[WhatsApp Webhook] Payload entrante:", JSON.stringify(body, null, 2));
+  const value = payload.entry?.[0]?.changes?.[0]?.value;
+  const message = value?.messages?.[0];
+  if (!message || message.type !== "text" || !message.from || !isNightTime()) {
+    return NextResponse.json({ success: true, processed: false });
+  }
 
-    // Estructura de Meta WhatsApp Cloud API
-    const entry = body.entry?.[0];
-    const changes = entry?.changes?.[0];
-    const value = changes?.value;
-    const messages = value?.messages;
+  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const apiVersion = process.env.WHATSAPP_GRAPH_API_VERSION;
+  if (!accessToken || !phoneNumberId || !apiVersion || !/^v\d+\.\d+$/.test(apiVersion)) {
+    return NextResponse.json({ error: "Respuesta automática no configurada" }, { status: 503 });
+  }
 
-    if (messages && messages.length > 0) {
-      const message = messages[0];
-      const fromNumber = message.from; // Número de WhatsApp del cliente
-      const messageText = message.text?.body || message.caption || "";
-      const contactProfile = value?.contacts?.[0]?.profile?.name || "Cliente";
-
-      const nocturnal = isNightTime();
-
-      console.log(`[WhatsApp Bot] Mensaje de ${contactProfile} (${fromNumber}): "${messageText}" | Modo nocturno: ${nocturnal}`);
-
-      const autoReply = generateNocturnalReply(contactProfile, messageText);
-
-      // Aquí se conectaría la llamada a la API de WhatsApp para enviar `autoReply` al cliente
-      // (ej: fetch(`https://graph.facebook.com/v21.0/${value.metadata.phone_number_id}/messages`, ...))
-
-      return NextResponse.json({
-        success: true,
-        processed: true,
-        lead: {
-          from: fromNumber,
-          name: contactProfile,
-          message: messageText,
-          isNocturnal: nocturnal,
-          suggestedReply: autoReply,
-          timestamp: new Date().toISOString(),
+  const name = value?.contacts?.[0]?.profile?.name?.slice(0, 80) || "cliente";
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${apiVersion}/${encodeURIComponent(phoneNumberId)}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-      });
-    }
-
-    // Respuesta rápida requerida por Meta para evitar reintentos automáticos
-    return NextResponse.json({ success: true, processed: false, message: "Evento no procesable" });
-  } catch (error) {
-    console.error("[WhatsApp Webhook] Error procesando webhook:", error);
-    // Respondemos 200 con bandera de error para no romper la suscripción en Meta
-    return NextResponse.json(
-      { success: false, error: (error as Error).message },
-      { status: 200 }
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: message.from,
+          type: "text",
+          text: { body: generateReply(name) },
+        }),
+        cache: "no-store",
+      }
     );
+    if (!response.ok) {
+      console.error("WhatsApp reply failed with status", response.status);
+      return NextResponse.json({ error: "No se pudo enviar la respuesta" }, { status: 502 });
+    }
+    return NextResponse.json({ success: true, processed: true });
+  } catch {
+    return NextResponse.json({ error: "No se pudo contactar WhatsApp" }, { status: 502 });
   }
 }
