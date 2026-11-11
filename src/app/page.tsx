@@ -27,6 +27,7 @@ import { GlowCard } from "@/components/cultui/glow-card";
 import { TintSimulator } from "@/components/skiperui/tint-simulator";
 import { ComparisonSlider } from "@/components/skiperui/comparison-slider";
 import { PricingCard, PricingPlan } from "@/components/skiperui/pricing-card";
+import { ReviewsSection } from "@/components/skiperui/reviews-section";
 
 const PRICING_PLANS: PricingPlan[] = [
   {
@@ -112,6 +113,9 @@ export default function Home() {
             </a>
             <a href="#precios" className="hover:text-amber-400 transition-colors">
               Paquetes
+            </a>
+            <a href="#opiniones" className="hover:text-amber-400 transition-colors">
+              Opiniones
             </a>
           </nav>
 
@@ -313,6 +317,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Real Customer Reviews from Neon DB (Skiper UI) */}
+      <ReviewsSection />
 
       {/* WhatsApp Nocturno Interactive Banner */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
