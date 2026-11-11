@@ -369,7 +369,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p>© {new Date().getFullYear()} Exclusive Tint. Todos los derechos reservados.</p>
+          <p>© 2026 Exclusive Tint. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
