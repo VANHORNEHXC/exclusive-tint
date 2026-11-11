@@ -1,69 +1,377 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Shield,
+  Sun,
+  Flame,
+  Sparkles,
+  Car,
+  Clock,
+  ArrowRight,
+  PhoneCall,
+  Award,
+  Layers,
+} from "lucide-react";
+
+// Magic UI Components
+import { Particles } from "@/components/magicui/particles";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
+import { BorderBeam } from "@/components/magicui/border-beam";
+import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
+
+// Cult UI Components
+import { Spotlight } from "@/components/cultui/spotlight";
+import { GradientHeading } from "@/components/cultui/gradient-heading";
+import { GlowCard } from "@/components/cultui/glow-card";
+
+// Skiper UI Components
+import { TintSimulator } from "@/components/skiperui/tint-simulator";
+import { ComparisonSlider } from "@/components/skiperui/comparison-slider";
+import { PricingCard, PricingPlan } from "@/components/skiperui/pricing-card";
+
+const PRICING_PLANS: PricingPlan[] = [
+  {
+    id: "carbon",
+    name: "Carbon Series",
+    tagline: "Estética deportiva con protección solar básica.",
+    price: "$149",
+    features: [
+      "Bloqueo 99% rayos UV",
+      "Reducción de calor de hasta 45%",
+      "Garantía de 3 años contra decoloración",
+      "Tonalidades disponibles: 5%, 20%, 35%",
+      "Corte computarizado a la medida",
+    ],
+    cta: "Cotizar Carbon",
+    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20Carbon%20Series",
+  },
+  {
+    id: "ceramic-ir",
+    name: "Nano-Ceramic IR",
+    tagline: "Nuestra fórmula más vendida para máxima reducción térmica.",
+    price: "$299",
+    popular: true,
+    features: [
+      "Bloqueo 99.9% rayos UV dañinos",
+      "Reducción térmica infrarroja de hasta 95%",
+      "Cero interferencia con GPS, radio o celulares",
+      "Garantía de por vida Exclusive Tint",
+      "Instalación certificada en bahía sellada",
+      "Incluye visera de parabrisas de cortesía",
+    ],
+    cta: "Cotizar Nano-Ceramic",
+    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20el%20paquete%20Nano-Ceramic%20IR",
+  },
+  {
+    id: "ppf-ultimate",
+    name: "Ceramic + Full PPF",
+    tagline: "Protección definitiva contra impactos de piedras y rayos solares.",
+    price: "$899",
+    features: [
+      "Tint Nano-Ceramic completo en todos los cristales",
+      "Paint Protection Film (PPF) frontal autorregenerable",
+      "Protección contra gravilla, piedras y rayones",
+      "Recubrimiento hidrofóbico cerámico en lunas",
+      "Garantía integral de 10 años",
+    ],
+    cta: "Cotizar Protección Total",
+    ctaHref: "https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20Ceramic%20plus%20PPF",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="relative min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
+      {/* Dynamic Background Particles (Magic UI) */}
+      <Particles quantity={45} color="#f59e0b" className="opacity-40" />
+
+      {/* Ambient Spotlight (Cult UI) */}
+      <Spotlight fill="rgba(245, 158, 11, 0.12)" />
+
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-black font-black text-base shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+              ET
+            </div>
+            <div>
+              <span className="text-xl font-black tracking-widest text-white">EXCLUSIVE</span>
+              <span className="text-xl font-black tracking-widest text-amber-400 ml-1.5">TINT</span>
+            </div>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+            <a href="#simulador" className="hover:text-amber-400 transition-colors">
+              Simulador
+            </a>
+            <a href="#servicios" className="hover:text-amber-400 transition-colors">
+              Servicios
+            </a>
+            <a href="#comparativa" className="hover:text-amber-400 transition-colors">
+              Tecnología Térmica
+            </a>
+            <a href="#precios" className="hover:text-amber-400 transition-colors">
+              Paquetes
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin"
+              className="text-xs font-semibold text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
+              Portal Interno
+            </Link>
+
             <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20cotizar%20un%20servicio"
+              target="_blank"
+              rel="noreferrer"
             >
-              Learning
-            </a>{" "}
-            center.
+              <ShimmerButton
+                shimmerColor="#fbbf24"
+                className="px-4 py-2 text-xs font-bold"
+              >
+                <span className="flex items-center gap-1.5">
+                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> WhatsApp Directo
+                </span>
+              </ShimmerButton>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center">
+        {/* Nocturnal Bot Live Badge */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+          <span>Bot Nocturno 24/7 de WhatsApp Activo</span>
+          <span className="text-zinc-500">•</span>
+          <span className="text-zinc-400">Cotizaciones inmediatas</span>
+        </div>
+
+        {/* Cult UI Gradient Heading */}
+        <GradientHeading size="xl" className="max-w-4xl mx-auto leading-none">
+          Polarizado Cerámico & Protección de Élite para tu Auto
+        </GradientHeading>
+
+        <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          Rechaza hasta un <strong className="text-white">96% del calor infrarrojo</strong> y el <strong className="text-white">99.9% de los rayos UV</strong> con películas nano-cerámicas de grado aeroespacial y corte computarizado.
+        </p>
+
+        {/* CTA Buttons with Magic UI & Border Beam */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+          <a
+            href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20deseo%20agendar%20mi%20cita"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ShimmerButton
+              shimmerColor="#f59e0b"
+              className="px-8 py-4 text-base font-bold shadow-2xl"
+            >
+              <span className="flex items-center gap-2">
+                Agendar Instalación VIP <ArrowRight className="h-4 w-4" />
+              </span>
+            </ShimmerButton>
+          </a>
+
+          <a
+            href="#simulador"
+            className="flex items-center gap-2 px-6 py-4 rounded-full border border-white/15 bg-white/5 text-sm font-bold text-zinc-200 hover:bg-white/10 hover:text-white transition-all backdrop-blur"
+          >
+            <Sun className="h-4 w-4 text-amber-400" /> Probar Tonalidades (5% - 70%)
+          </a>
+        </div>
+
+        {/* Quick Trust Highlights */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl border-t border-white/10 pt-8 text-left">
+          <div className="flex items-center gap-3">
+            <Award className="h-8 w-8 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-sm font-bold text-white">Garantía De Por Vida</div>
+              <div className="text-xs text-zinc-500">Cero burbujas o tonos morados</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Flame className="h-8 w-8 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-sm font-bold text-white">-15°C Menos Calor</div>
+              <div className="text-xs text-zinc-500">Máximo confort en cabina</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Car className="h-8 w-8 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-sm font-bold text-white">Plotter de Precisión</div>
+              <div className="text-xs text-zinc-500">Sin navajas en tus vidrios</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Clock className="h-8 w-8 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-sm font-bold text-white">Instalación en 90 min</div>
+              <div className="text-xs text-zinc-500">Bahía sellada climatizada</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Tint Simulator (Skiper UI) */}
+      <section id="simulador" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+        <TintSimulator />
+      </section>
+
+      {/* Before / After Thermal Comparison Slider (Skiper UI) */}
+      <section id="comparativa" className="py-20 px-6 max-w-5xl mx-auto scroll-mt-24 text-center">
+        <div className="mb-10">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+            Diferencia Infrarroja
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
+            Siente el cambio antes y después de la instalación
+          </h2>
+          <p className="text-sm text-zinc-400 mt-2">
+            Desliza el divisor interactivo para comparar la penetración térmica y la protección del interior.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <ComparisonSlider />
+      </section>
+
+      {/* Services Bento Grid (Magic UI) */}
+      <section id="servicios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+        <div className="text-center mb-12">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+            Especialidades Exclusive Tint
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
+            Tratamientos Estéticos y de Protección Vehicular
+          </h2>
         </div>
-      </main>
+
+        <BentoGrid>
+          <BentoCard
+            name="Nano-Ceramic Window Tint"
+            description="Películas cerámicas no metálicas de última generación con hasta 96% de rechazo infrarrojo. No interfieren con telecomunicaciones."
+            Icon={Sun}
+            cta="Saber más"
+            href="#simulador"
+            className="md:col-span-2"
+            background={
+              <div className="absolute inset-0 bg-gradient-to-tr from-amber-950/30 via-zinc-900 to-black" />
+            }
+          />
+          <BentoCard
+            name="Paint Protection Film (PPF)"
+            description="Blindaje transparente autorregenerable de uretano contra impactos de piedras de carretera, gravilla e insectos."
+            Icon={Shield}
+            cta="Cotizar PPF"
+            href="https://wa.me/?text=Cotizar%20PPF"
+            className="md:col-span-1"
+          />
+          <BentoCard
+            name="Ceramic Coating 9H"
+            description="Sellado de cristales y carrocería con brillo hidrofóbico efecto espejo de ultra larga duración."
+            Icon={Sparkles}
+            cta="Ver detalles"
+            href="https://wa.me/?text=Cotizar%20Ceramic%20Coating"
+            className="md:col-span-1"
+          />
+          <BentoCard
+            name="Corte Computarizado Digital"
+            description="Patrones exactos pre-cortados por software digital milimétrico para cada marca y modelo. Cero cortes sobre los cristales o empaques de tu auto."
+            Icon={Layers}
+            cta="Ver tecnología"
+            href="#simulador"
+            className="md:col-span-2"
+            background={
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black" />
+            }
+          />
+        </BentoGrid>
+      </section>
+
+      {/* Pricing Packages (Skiper UI) */}
+      <section id="precios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+            Inversión Transparente
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
+            Paquetes de Instalación Certificada
+          </h2>
+          <p className="text-sm text-zinc-400 mt-2">
+            Elige el nivel de rendimiento que mejor se adapte a tu vehículo y estilo de vida.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {PRICING_PLANS.map((plan) => (
+            <PricingCard key={plan.id} plan={plan} />
+          ))}
+        </div>
+      </section>
+
+      {/* WhatsApp Nocturno Interactive Banner */}
+      <section className="py-16 px-6 max-w-5xl mx-auto">
+        <GlowCard glowColor="amber" className="p-8 sm:p-12 relative overflow-hidden">
+          <BorderBeam size={300} duration={12} colorFrom="#f59e0b" colorTo="#eab308" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="space-y-3 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" /> Asistente Nocturno 24/7
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white">
+                ¿Tienes una consulta tarde en la noche?
+              </h3>
+              <p className="text-sm text-zinc-400 max-w-lg">
+                Nuestro bot de WhatsApp con IA procesa tu cotización de madrugada y asegura tu turno preferencial a primera hora de la mañana.
+              </p>
+            </div>
+
+            <a
+              href="https://wa.me/?text=Hola%20Exclusive%20Tint,%20quiero%20cotizar%20un%20servicio"
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0"
+            >
+              <ShimmerButton
+                shimmerColor="#ffffff"
+                className="px-6 py-3.5 text-sm font-bold bg-amber-500 text-black"
+              >
+                Escribir al Bot de WhatsApp
+              </ShimmerButton>
+            </a>
+          </div>
+        </GlowCard>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 bg-zinc-950 py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
+          <div className="flex items-center gap-2 text-zinc-300 font-bold">
+            <span>EXCLUSIVE TINT</span>
+            <span>•</span>
+            <span>Estudio Automotriz de Precisión</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <a href="#simulador" className="hover:text-white transition-colors">
+              Simulador
+            </a>
+            <a href="#servicios" className="hover:text-white transition-colors">
+              Servicios
+            </a>
+            <Link href="/admin" className="hover:text-white transition-colors">
+              Portal del Equipo
+            </Link>
+          </div>
+
+          <p>© {new Date().getFullYear()} Exclusive Tint. Todos los derechos reservados.</p>
+        </div>
+      </footer>
     </div>
   );
 }

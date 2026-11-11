@@ -11,11 +11,13 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1165.0",
     "@aws-sdk/s3-request-presigner": "^3.1165.0",
+    "@types/pg": "^8.23.1",
     "better-auth": "^1.7.19",
     "clsx": "^2.1.1",
     "framer-motion": "^14.12.0",
     "lucide-react": "^1.71.0",
     "next": "16.4.6",
+    "pg": "^8.23.1",
     "postgres": "^4.1.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
