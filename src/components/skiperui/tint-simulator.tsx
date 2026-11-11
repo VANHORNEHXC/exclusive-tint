@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/context/LocaleContext";
 import { ShieldCheck, Sun, Eye, Flame, CheckCircle2 } from "lucide-react";
 
 interface TintOption {
@@ -78,6 +79,7 @@ const TINT_OPTIONS: TintOption[] = [
 ];
 
 export function TintSimulator() {
+  const { t, image, locale } = useLocale();
   const [selected, setSelected] = useState<TintOption>(TINT_OPTIONS[1]);
 
   return (
@@ -85,21 +87,21 @@ export function TintSimulator() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400 mb-2">
-            <Sun className="h-3.5 w-3.5" /> Simulador Interactivo de Tonalidades
+            <Sun className="h-3.5 w-3.5" /> {t("sim.eyebrow")}
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white">
-            Elige el nivel de oscuridad para tu auto
+            {t("sim.heading")}
           </h2>
           <p className="text-sm text-zinc-400 mt-1">
-            Visualización orientativa de tonalidad. Confirma las prestaciones con la ficha técnica de la película.
+            {t("sim.intro")}
           </p>
         </div>
 
         {/* Selected badge with Framer Motion counter effect */}
         <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-2xl px-5 py-3">
           <div className="text-right">
-            <div className="text-xs text-zinc-400">Tono Seleccionado</div>
-            <div className="text-lg font-bold text-white">{selected.name}</div>
+            <div className="text-xs text-zinc-400">{t("sim.selected")}</div>
+            <div className="text-lg font-bold text-white">{t(`sim.option${selected.percentage}.name`)}</div>
           </div>
           <motion.div
             key={selected.percentage}
@@ -114,7 +116,7 @@ export function TintSimulator() {
       </div>
 
       {/* Simulator Vehicle Window Display with Motion Crossfade */}
-      <div className="my-8 relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black p-8 text-center min-h-[260px] flex flex-col justify-between">
+      <div className="my-8 relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black p-8 text-center min-h-[260px] flex flex-col justify-between" style={image("simulator") ? { backgroundImage: `linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85)), url("${image("simulator")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} role={image("simulator") ? "img" : undefined} aria-label={image("simulator")?.[locale === "es" ? "alt_es" : "alt_en"]}>
         <div className="relative mx-auto w-full max-w-2xl py-6">
           <div className="relative h-36 w-full rounded-2xl bg-zinc-800/40 border border-zinc-700/50 p-3 flex items-center justify-center overflow-hidden">
             {/* Interior car view background */}
@@ -125,12 +127,12 @@ export function TintSimulator() {
               <div className="flex flex-col items-center">
                 <div className="w-10 h-10 rounded-full bg-zinc-600 mb-1" />
                 <div className="w-16 h-8 rounded-t-xl bg-zinc-700" />
-                <span>Conductor</span>
+                <span>{t("sim.driver")}</span>
               </div>
               <div className="flex flex-col items-center">
                 <div className="w-10 h-10 rounded-full bg-zinc-600 mb-1" />
                 <div className="w-16 h-8 rounded-t-xl bg-zinc-700" />
-                <span>Copiloto</span>
+                <span>{t("sim.passenger")}</span>
               </div>
             </div>
 
@@ -148,7 +150,7 @@ export function TintSimulator() {
                 )}
               >
                 <div className="relative z-10 text-center px-4 py-2 rounded-lg bg-black/60 border border-white/10 text-white font-mono text-sm font-bold shadow-xl">
-                  Vista exterior simulada ({selected.percentage}% VLT)
+                  {t("sim.preview")} ({selected.percentage}% VLT)
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -159,7 +161,7 @@ export function TintSimulator() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-white/5">
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" /> Rechazo UV
+              <ShieldCheck className="h-4 w-4 text-emerald-400" /> {t("sim.uv")}
             </div>
             <motion.div
               key={selected.uvRejection}
@@ -172,7 +174,7 @@ export function TintSimulator() {
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
-              <Flame className="h-4 w-4 text-amber-400" /> Rechazo Calor (IR)
+              <Flame className="h-4 w-4 text-amber-400" /> {t("sim.heat")}
             </div>
             <motion.div
               key={selected.irHeatRejection}
@@ -185,7 +187,7 @@ export function TintSimulator() {
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
-              <Eye className="h-4 w-4 text-blue-400" /> Reducción Destello
+              <Eye className="h-4 w-4 text-blue-400" /> {t("sim.glare")}
             </div>
             <motion.div
               key={selected.glareReduction}
@@ -198,15 +200,15 @@ export function TintSimulator() {
           </div>
           <div className="bg-zinc-900/60 rounded-xl p-3 border border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 justify-center sm:justify-start">
-              <CheckCircle2 className="h-4 w-4 text-purple-400" /> Categoría
+              <CheckCircle2 className="h-4 w-4 text-purple-400" /> {t("sim.category")}
             </div>
             <motion.div
-              key={selected.category}
+              key={t(`sim.option${selected.percentage}.category`)}
               initial={{ y: 5, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               className="text-sm font-semibold text-zinc-200 truncate"
             >
-              {selected.category}
+              {t(`sim.option${selected.percentage}.category`)}
             </motion.div>
           </div>
         </div>
@@ -238,12 +240,12 @@ export function TintSimulator() {
 
               {item.popular && (
                 <span className="absolute -top-2.5 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-black uppercase text-black px-2 py-0.5 rounded-full shadow">
-                  Más Popular
+                  {t("sim.popular")}
                 </span>
               )}
               <span className="relative z-10 text-2xl font-black">{item.percentage}%</span>
               <span className="relative z-10 text-xs font-medium text-zinc-400 mt-1">
-                {item.name.replace(`${item.percentage}% `, "")}
+                {t(`sim.option${item.percentage}.name`).replace(`${item.percentage}% `, "")}
               </span>
             </button>
           );
@@ -253,10 +255,10 @@ export function TintSimulator() {
       {/* Description & Legal notes */}
       <div className="mt-6 p-4 rounded-xl bg-zinc-900/40 border border-white/5 text-xs text-zinc-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <p>
-          <strong className="text-zinc-200">Recomendación:</strong> {selected.description}
+          <strong className="text-zinc-200">{t("sim.recommendation")}</strong> {t(`sim.option${selected.percentage}.description`)}
         </p>
         <span className="text-amber-400/90 font-medium whitespace-nowrap">
-          {selected.legalNote}
+          {t("sim.legal")}
         </span>
       </div>
     </div>

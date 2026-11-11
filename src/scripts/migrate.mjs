@@ -151,6 +151,45 @@ async function runMigration() {
       )
     `;
 
+    // Portal, editor, analytics, and bot configuration. Existing tables are preserved.
+    await sql`CREATE TABLE IF NOT EXISTS admin_users (
+      id INTEGER PRIMARY KEY CHECK (id = 1), username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS admin_sessions (
+      token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+      expires_at TIMESTAMPTZ NOT NULL
+    )`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires ON admin_sessions (expires_at)`;
+    await sql`CREATE TABLE IF NOT EXISTS site_texts (
+      locale TEXT NOT NULL CHECK (locale IN ('es', 'en')), key TEXT NOT NULL,
+      value TEXT NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (locale, key)
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS site_images (
+      slot TEXT PRIMARY KEY, object_key TEXT NOT NULL, mime_type TEXT NOT NULL,
+      alt_es TEXT NOT NULL DEFAULT '', alt_en TEXT NOT NULL DEFAULT '',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS site_events (
+      id BIGSERIAL PRIMARY KEY,
+      event_type TEXT NOT NULL CHECK (event_type IN ('page_view', 'whatsapp_click')),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_site_events_created ON site_events (created_at DESC)`;
+    await sql`CREATE TABLE IF NOT EXISTS bot_settings (
+      id INTEGER PRIMARY KEY CHECK (id = 1), enabled BOOLEAN NOT NULL DEFAULT false,
+      start_time TIME NOT NULL DEFAULT '19:00', end_time TIME NOT NULL DEFAULT '09:00',
+      timezone TEXT NOT NULL DEFAULT 'America/Panama',
+      reply_template TEXT NOT NULL DEFAULT '¡Hola {name}! Gracias por escribir a Exclusive Tint. Nuestro taller está cerrado. Indícanos marca, modelo, año, servicio y tonalidad; te responderemos en horario de atención.',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
+    await sql`INSERT INTO bot_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING`;
+    await sql`CREATE TABLE IF NOT EXISTS integration_secrets (
+      key TEXT PRIMARY KEY, encrypted_value TEXT NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
+
     console.log("✅ [Migration] Esquema, tablas, índices y triggers creados exitosamente en Neon PostgreSQL.");
     await sql.end();
     process.exit(0);

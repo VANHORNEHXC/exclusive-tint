@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Star, ShieldCheck, ThumbsUp, Car } from "lucide-react";
+import { useLocale } from "@/context/LocaleContext";
 
 interface PublicReview {
   id: string;
@@ -15,6 +16,7 @@ interface PublicReview {
 }
 
 export function ReviewsSection() {
+  const { t } = useLocale();
   const [reviews, setReviews] = useState<PublicReview[] | null>(null);
 
   useEffect(() => {
@@ -35,13 +37,13 @@ export function ReviewsSection() {
     <section id="opiniones" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
       <div className="text-center mb-14">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
-          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> Opiniones
+          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> {t("reviews.badge")}
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          Opiniones de Clientes
+          {t("reviews.heading")}
         </h2>
         <p className="text-sm text-zinc-400 mt-2 max-w-xl mx-auto">
-          {reviews === null ? "Cargando opiniones..." : reviews.length > 0 ? "Experiencias compartidas por nuestros clientes." : "Próximamente publicaremos opiniones de nuestros clientes."}
+          {reviews === null ? t("reviews.loading") : reviews.length > 0 ? t("reviews.intro") : t("reviews.empty")}
         </p>
       </div>
 
@@ -64,7 +66,7 @@ export function ReviewsSection() {
                 </div>
                 {rev.is_verified && (
                   <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                    <ShieldCheck className="h-3 w-3" /> Verificado
+                    <ShieldCheck className="h-3 w-3" /> {t("reviews.verified")}
                   </span>
                 )}
               </div>

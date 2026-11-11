@@ -1,5 +1,8 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { getIntegrationValue } from "@/lib/admin-auth";
+import { getBotSettings } from "@/lib/site-data";
+import type { BotSettings } from "@/lib/site-data";
 
 function validSignature(rawBody: string, signature: string | null, secret: string): boolean {
   if (!signature || !/^sha256=[a-f0-9]{64}$/i.test(signature)) return false;
@@ -8,23 +11,16 @@ function validSignature(rawBody: string, signature: string | null, secret: strin
   return received.length === expected.length && timingSafeEqual(received, expected);
 }
 
-function isNightTime(): boolean {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/Panama",
-      hour: "2-digit",
-      hourCycle: "h23",
-    }).format(new Date())
-  );
-  return hour >= 19 || hour < 9;
-}
-
-function generateReply(name: string): string {
-  return `¡Hola ${name || "cliente"}! Gracias por escribir a Exclusive Tint. Nuestro taller está cerrado en este momento. Para preparar tu cotización, indícanos la marca, el modelo y el año de tu vehículo, el servicio que deseas y la tonalidad preferida. Te responderemos en horario de atención.`;
+function inSchedule(settings: BotSettings): boolean {
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: settings.timezone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
+  const current = Number(parts.slice(0, 2)) * 60 + Number(parts.slice(3, 5));
+  const start = Number(settings.start_time.slice(0, 2)) * 60 + Number(settings.start_time.slice(3, 5));
+  const end = Number(settings.end_time.slice(0, 2)) * 60 + Number(settings.end_time.slice(3, 5));
+  return start < end ? current >= start && current < end : start > end ? current >= start || current < end : true;
 }
 
 export async function GET(req: NextRequest) {
-  const verifyToken = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+  const verifyToken = await getIntegrationValue("WHATSAPP_WEBHOOK_VERIFY_TOKEN");
   if (!verifyToken) return NextResponse.json({ error: "Webhook no configurado" }, { status: 503 });
 
   const params = req.nextUrl.searchParams;
@@ -39,7 +35,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const appSecret = process.env.WHATSAPP_APP_SECRET;
+  const appSecret = await getIntegrationValue("WHATSAPP_APP_SECRET");
   if (!appSecret) return NextResponse.json({ error: "Webhook no configurado" }, { status: 503 });
 
   const rawBody = await req.text();
@@ -67,13 +63,14 @@ export async function POST(req: NextRequest) {
 
   const value = payload.entry?.[0]?.changes?.[0]?.value;
   const message = value?.messages?.[0];
-  if (!message || message.type !== "text" || !message.from || !isNightTime()) {
+  const settings = await getBotSettings();
+  if (!message || message.type !== "text" || !message.from || !settings.enabled || !inSchedule(settings)) {
     return NextResponse.json({ success: true, processed: false });
   }
 
-  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
-  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-  const apiVersion = process.env.WHATSAPP_GRAPH_API_VERSION;
+  const accessToken = await getIntegrationValue("WHATSAPP_ACCESS_TOKEN");
+  const phoneNumberId = await getIntegrationValue("WHATSAPP_PHONE_NUMBER_ID");
+  const apiVersion = await getIntegrationValue("WHATSAPP_GRAPH_API_VERSION");
   if (!accessToken || !phoneNumberId || !apiVersion || !/^v\d+\.\d+$/.test(apiVersion)) {
     return NextResponse.json({ error: "Respuesta automática no configurada" }, { status: 503 });
   }
@@ -92,7 +89,7 @@ export async function POST(req: NextRequest) {
           messaging_product: "whatsapp",
           to: message.from,
           type: "text",
-          text: { body: generateReply(name) },
+          text: { body: settings.reply_template.replaceAll("{name}", name) },
         }),
         cache: "no-store",
       }

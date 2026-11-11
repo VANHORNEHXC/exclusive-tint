@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/context/LocaleContext";
 import { Check, Sparkles } from "lucide-react";
 
 export interface PricingPlan {
@@ -20,6 +21,7 @@ export function PricingCard({
   plan: PricingPlan;
   className?: string;
 }) {
+  const { t } = useLocale();
   return (
     <div
       className={cn(
@@ -32,7 +34,7 @@ export function PricingCard({
     >
       {plan.popular && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1 text-[11px] font-black uppercase text-black shadow-lg flex items-center gap-1">
-          <Sparkles className="h-3 w-3" /> Recomendado
+          <Sparkles className="h-3 w-3" /> {t("pricing.recommended")}
         </div>
       )}
 
@@ -44,7 +46,7 @@ export function PricingCard({
           <span className="text-4xl font-extrabold tracking-tight text-white">
             {plan.price}
           </span>
-          <span className="text-xs text-zinc-400">/ instalación</span>
+          <span className="text-xs text-zinc-400">{t("pricing.installation")}</span>
         </div>
 
         <ul className="mt-8 space-y-3 border-t border-white/10 pt-6">

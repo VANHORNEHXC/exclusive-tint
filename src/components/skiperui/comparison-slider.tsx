@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/context/LocaleContext";
 
 interface ComparisonSliderProps {
   className?: string;
@@ -11,9 +12,10 @@ interface ComparisonSliderProps {
 
 export function ComparisonSlider({
   className,
-  beforeLabel = "Sin Polarizado (Calor & UV)",
-  afterLabel = "Con polarizado cerámico",
+  beforeLabel,
+  afterLabel,
 }: ComparisonSliderProps) {
+  const { t, image, locale } = useLocale();
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -47,20 +49,20 @@ export function ComparisonSlider({
       )}
     >
       {/* Before Layer (Clear glass / exposed) */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-amber-950/30 via-zinc-900 to-zinc-950">
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-amber-950/30 via-zinc-900 to-zinc-950" style={image("compare_before") ? { backgroundImage: `linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)), url("${image("compare_before")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} role={image("compare_before") ? "img" : undefined} aria-label={image("compare_before")?.[locale === "es" ? "alt_es" : "alt_en"]}>
         <div className="text-center p-6">
           <div className="inline-block px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-semibold mb-2">
-            Cristal de Fábrica
+            {t("compare.beforeBadge")}
           </div>
           <h4 className="text-xl sm:text-2xl font-bold text-zinc-100">
-            Desgaste del interior por radiación solar
+            {t("compare.beforeTitle")}
           </h4>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mt-1 mx-auto">
-            La luz solar puede elevar la temperatura y desgastar los materiales del interior.
+            {t("compare.beforeBody")}
           </p>
         </div>
         <span className="absolute bottom-4 left-4 rounded-lg bg-black/60 px-3 py-1 text-xs font-bold text-zinc-300 backdrop-blur">
-          {beforeLabel}
+          {beforeLabel ?? t("compare.beforeLabel")}
         </span>
       </div>
 
@@ -69,21 +71,23 @@ export function ComparisonSlider({
         className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-zinc-950 via-zinc-900 to-black overflow-hidden"
         style={{
           clipPath: `polygon(${sliderPosition}% 0, 100% 0, 100% 100%, ${sliderPosition}% 100%)`,
+          backgroundImage: image("compare_after") ? `linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)), url("${image("compare_after")?.url}")` : undefined,
+          backgroundSize: "cover", backgroundPosition: "center",
         }}
       >
         <div className="text-center p-6">
           <div className="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold mb-2">
-            Nano-Cerámica Exclusive
+            {t("compare.afterBadge")}
           </div>
           <h4 className="text-xl sm:text-2xl font-bold text-white">
-            Cabina fresca, protegida y con privacidad VIP
+            {t("compare.afterTitle")}
           </h4>
           <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mt-1 mx-auto">
-            Una película adecuada puede reducir la entrada de calor y proteger el interior.
+            {t("compare.afterBody")}
           </p>
         </div>
         <span className="absolute bottom-4 right-4 rounded-lg bg-amber-500/80 px-3 py-1 text-xs font-bold text-black backdrop-blur">
-          {afterLabel}
+          {afterLabel ?? t("compare.afterLabel")}
         </span>
       </div>
 

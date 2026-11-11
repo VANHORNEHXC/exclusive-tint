@@ -14,17 +14,21 @@ Configura las variables de `.env.local` antes de usar las integraciones. La pág
 
 ## Base de datos y portal
 
-`DATABASE_URL` o `DATABASE_URL_POOLED` conecta PostgreSQL. Ejecuta `npm run db:migrate` para crear las tablas de órdenes y reseñas. La migración no agrega clientes ni reseñas ficticias.
+Configura `DATABASE_URL` (o `DATABASE_URL_POOLED`) y ejecuta `npm run db:migrate`. La migración crea las tablas de órdenes, contenido, eventos, usuarios, sesiones y configuración del bot sin agregar datos ficticios. Algunas bases antiguas contienen órdenes de ejemplo ET-1001/ET-1002; el portal las oculta solo si coinciden con sus nombres y teléfonos originales.
 
-Una versión anterior de la migración insertó dos órdenes ficticias (`ET-1001`, `ET-1002`) y tres reseñas de muestra en algunas bases existentes. El portal oculta las dos órdenes solo cuando coinciden sus nombres y teléfonos de ejemplo; revisa esos registros en la base antes de eliminarlos. La web pública consulta reseñas aprobadas y filtra las tres muestras conocidas.
+Abre `/admin` y entra con `ADMIN_USERNAME` y `ADMIN_PASSWORD` de `.env.local`. En el primer acceso se crea una cuenta en PostgreSQL; luego puedes cambiar usuario y contraseña en **Credentials**. El portal usa una cookie HTTP-only y debe servirse por HTTPS en producción. Conserva `ADMIN_ENCRYPTION_KEY` (32 bytes codificados en base64) de forma estable: se usa para cifrar las credenciales de Meta guardadas en el portal. Si cambias la clave, tendrás que volver a introducir esas credenciales.
 
-El portal requiere `ADMIN_USERNAME` y `ADMIN_PASSWORD` (mínimo 16 caracteres), y debe servirse sobre HTTPS. Muestra órdenes reales y guarda los cambios de estado en PostgreSQL. Si faltan estas variables, devuelve 503; sin credenciales válidas, devuelve 401. El portal no incluye todavía gestión de reseñas, leads ni carga de fotos.
+Las cinco pestañas son:
+
+- **Orders:** consultar, buscar, crear y editar órdenes.
+- **Analytics:** visitas y clics de WhatsApp durante 30 días, además de órdenes y valor entregado. Los eventos son anónimos.
+- **Web Editor:** publicar textos en español e inglés y subir imágenes para ocho espacios del sitio. Requiere el bucket S3 configurado en `.env.local` para las imágenes.
+- **Credentials:** cambiar el acceso del portal y guardar los cinco valores de Meta cifrados. Las variables `WHATSAPP_*` del servidor siguen siendo alternativas si no se guardan valores aquí.
+- **Bot Settings:** activar el bot, definir horario, zona horaria y respuesta. Usa `{name}` para insertar el nombre del contacto.
 
 ## WhatsApp
 
-Los enlaces de cotización usan el número proporcionado por el negocio (`+1 323 815 6876`). Puedes cambiarlo mediante `NEXT_PUBLIC_WHATSAPP_NUMBER`, con código de país y solo dígitos.
-
-El webhook `/api/webhook/whatsapp` necesita `WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` y `WHATSAPP_GRAPH_API_VERSION`. Valida la firma de Meta y responde a mensajes de texto fuera del horario de 09:00 a 19:00, hora de Panamá. No guarda leads en la base de datos ni calcula cotizaciones automáticas.
+Los enlaces de cotización usan `NEXT_PUBLIC_WHATSAPP_NUMBER` (por defecto, el número proporcionado: `+1 323 815 6876`). La URL de verificación y mensajes de Meta es `/api/webhook/whatsapp`. Configura los cinco valores de Meta en **Credentials** o en las variables `WHATSAPP_*`, y activa el bot en **Bot Settings**. El webhook valida la firma de Meta y responde a mensajes de texto recibidos durante el horario configurado. No crea órdenes ni calcula cotizaciones automáticamente.
 
 ## Comprobaciones
 

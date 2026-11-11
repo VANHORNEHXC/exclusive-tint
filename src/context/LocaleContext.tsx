@@ -1,14 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
-import { translations } from "@/lib/translations";
+import { defaultSiteTexts } from "@/lib/site-content";
+import type { SiteImage } from "@/lib/site-content";
 import type { Locale } from "@/lib/translations";
 
 interface LocaleContextValue {
   locale: Locale;
   toggleLocale: () => void;
   t: (key: string) => string;
+  image: (slot: string) => SiteImage | undefined;
 }
 
 const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
@@ -35,6 +37,16 @@ function subscribeToLocale(callback: () => void) {
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const locale = useSyncExternalStore<Locale>(subscribeToLocale, getLocale, () => "es");
+  const [content, setContent] = useState<{ texts: Record<Locale, Record<string, string>>; images: Record<string, SiteImage> }>({ texts: { es: {}, en: {} }, images: {} });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/site/content", { signal: controller.signal, cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Content unavailable")))
+      .then((value) => { if (!controller.signal.aborted) setContent(value); })
+      .catch(() => { /* Published defaults remain available if content service is offline. */ });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -51,11 +63,13 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   }
 
   function t(key: string) {
-    return translations[locale][key] ?? key;
+    return content.texts[locale]?.[key] ?? defaultSiteTexts[locale][key] ?? key;
   }
 
+  function image(slot: string) { return content.images[slot]; }
+
   return (
-    <LocaleContext.Provider value={{ locale, toggleLocale, t }}>
+    <LocaleContext.Provider value={{ locale, toggleLocale, t, image }}>
       {children}
     </LocaleContext.Provider>
   );

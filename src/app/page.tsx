@@ -32,63 +32,29 @@ import { PricingCard, PricingPlan } from "@/components/skiperui/pricing-card";
 import { ReviewsSection } from "@/components/skiperui/reviews-section";
 
 import { useLocale } from '@/context/LocaleContext';
+import { useEffect, type MouseEvent } from 'react';
 import Link from 'next/link';
 import { whatsappUrl } from '@/lib/contact';
 
-const PRICING_PLANS: PricingPlan[] = [
-  {
-    id: "carbon",
-    name: "Carbon Series",
-    tagline: "Estética deportiva con protección solar básica.",
-    price: "$149",
-    features: [
-      "Bloqueo 99% rayos UV",
-      "Reducción de calor de hasta 45%",
-      "Garantía de 3 años contra decoloración",
-      "Tonalidades disponibles: 5%, 20%, 35%",
-      "Corte computarizado a la medida",
-    ],
-    cta: "Cotizar Carbon",
-    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar Carbon Series"),
-  },
-  {
-    id: "ceramic-ir",
-    name: "Nano-Ceramic IR",
-    tagline: "Nuestra fórmula más vendida para máxima reducción térmica.",
-    price: "$299",
-    popular: true,
-    features: [
-      "Bloqueo 99.9% rayos UV dañinos",
-      "Reducción térmica infrarroja de hasta 95%",
-      "Cero interferencia con GPS, radio o celulares",
-      "Garantía de por vida Exclusive Tint",
-      "Instalación certificada en bahía sellada",
-      "Incluye visera de parabrisas de cortesía",
-    ],
-    cta: "Cotizar Nano-Ceramic",
-    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar el paquete Nano-Ceramic IR"),
-  },
-  {
-    id: "ppf-ultimate",
-    name: "Ceramic + Full PPF",
-    tagline: "Protección definitiva contra impactos de piedras y rayos solares.",
-    price: "$899",
-    features: [
-      "Tint Nano-Ceramic completo en todos los cristales",
-      "Paint Protection Film (PPF) frontal autorregenerable",
-      "Protección contra gravilla, piedras y rayones",
-      "Recubrimiento hidrofóbico cerámico en lunas",
-      "Garantía integral de 10 años",
-    ],
-    cta: "Cotizar Protección Total",
-    ctaHref: whatsappUrl("Hola Exclusive Tint, deseo cotizar Ceramic plus PPF"),
-  },
-];
-
 export default function Home() {
-  const { t } = useLocale();
+  const { t, image, locale } = useLocale();
+  useEffect(() => { void fetch("/api/analytics", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ event: "page_view" }), keepalive: true }).catch(() => {}); }, []);
+  function trackWhatsApp(event: MouseEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement;
+    if (target.closest('a[href*="wa.me"]')) void fetch("/api/analytics", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ event: "whatsapp_click" }), keepalive: true }).catch(() => {});
+  }
+  const brands = t("marquee.brands").split(",").map((brand) => brand.trim()).filter(Boolean);
+  const plans: PricingPlan[] = ([{ id: "carbon", count: 5 }, { id: "ceramic", count: 6 }, { id: "ppf", count: 5 }] as const).map(({ id, count }) => ({
+    id, name: t(`plan.${id}.name`), tagline: t(`plan.${id}.tagline`), price: t(`plan.${id}.price`),
+    popular: id === "ceramic", features: Array.from({ length: count }, (_, index) => t(`plan.${id}.feature${index + 1}`)),
+    cta: t(`plan.${id}.cta`), ctaHref: whatsappUrl(`${t("whatsapp.message.quote")}: ${t(`plan.${id}.name`)}`),
+  }));
+  function serviceImage(slot: string, fallback: string) {
+    const uploaded = image(slot);
+    return <div role={uploaded ? "img" : undefined} aria-label={uploaded ? uploaded[locale === "es" ? "alt_es" : "alt_en"] : undefined} className={`absolute inset-0 ${fallback}`} style={uploaded ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.1)), url("${uploaded.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} />;
+  }
   return (
-    <div className="relative min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
+    <div onClick={trackWhatsApp} className="relative min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
       {/* Dynamic Background Particles (Magic UI) */}
       <Particles quantity={45} color="#f59e0b" className="opacity-40" />
 
@@ -103,8 +69,7 @@ export default function Home() {
               ET
             </div>
             <div>
-              <span className="text-xl font-black tracking-widest text-white">EXCLUSIVE</span>
-              <span className="text-xl font-black tracking-widest text-amber-400 ml-1.5">TINT</span>
+              <span className="text-xl font-black tracking-widest text-white">{t("brand.name")}</span>
             </div>
           </Link>
 
@@ -118,7 +83,7 @@ export default function Home() {
 
           <div className="flex items-center gap-3">
             <a
-              href={whatsappUrl("Hola Exclusive Tint, deseo cotizar un servicio")}
+              href={whatsappUrl(t("whatsapp.message.quote"))}
               target="_blank"
               rel="noreferrer"
             >
@@ -134,6 +99,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center">
+        {image("hero") && <div role="img" aria-label={image("hero")?.[locale === "es" ? "alt_es" : "alt_en"]} className="absolute inset-0 -z-10 opacity-40" style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,.2), #000), url("${image("hero")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />}
         {/* WhatsApp contact badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
@@ -153,7 +119,7 @@ export default function Home() {
         {/* CTA Buttons with Magic UI & Border Beam */}
         <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
           <a
-            href={whatsappUrl("Hola Exclusive Tint, deseo agendar mi cita")}
+            href={whatsappUrl(t("whatsapp.message.book"))}
             target="_blank"
             rel="noreferrer"
           >
@@ -210,18 +176,7 @@ export default function Home() {
             {t('marquee.title')}
           </div>
           <Marquee pauseOnHover className="[--duration:25s]">
-            {[
-              "PORSCHE",
-              "TESLA",
-              "BMW M-SERIES",
-              "MERCEDES-BENZ",
-              "AUDI SPORT",
-              "RANGE ROVER",
-              "LAMBORGHINI",
-              "FERRARI",
-              "CORVETTE",
-              "LEXUS F-SPORT",
-            ].map((brand) => (
+            {brands.map((brand) => (
               <span key={brand} className="mx-4 text-sm font-black tracking-widest text-zinc-400 hover:text-amber-400 transition-colors">
                 {brand}
               </span>
@@ -238,9 +193,9 @@ export default function Home() {
       {/* Before / After Thermal Comparison Slider (Skiper UI) */}
       <section id="comparativa" className="py-20 px-6 max-w-5xl mx-auto scroll-mt-24 text-center">
         <div className="mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Diferencia Infrarroja</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Siente el cambio antes y después de la instalación</h2>
-          <p className="text-sm text-zinc-400 mt-2">Desliza el divisor interactivo para comparar la penetración térmica y la protección del interior.</p>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("compare.eyebrow")}</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("compare.heading")}</h2>
+          <p className="text-sm text-zinc-400 mt-2">{t("compare.intro")}</p>
         </div>
         <ComparisonSlider />
       </section>
@@ -248,43 +203,45 @@ export default function Home() {
       {/* Services Bento Grid (Magic UI) */}
       <section id="servicios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
         <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Especialidades Exclusive Tint</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Tratamientos Estéticos y de Protección Vehicular</h2>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("services.eyebrow")}</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("services.heading")}</h2>
         </div>
         <BentoGrid>
           <BentoCard
-            name="Nano-Ceramic Window Tint"
-            description="Películas cerámicas no metálicas de última generación con hasta 96% de rechazo infrarrojo. No interfieren con telecomunicaciones."
+            name={t("service.tint.name")}
+            description={t("service.tint.description")}
             Icon={Sun}
-            cta="Saber más"
+            cta={t("service.tint.cta")}
             href="#simulador"
             className="md:col-span-2"
-            background={<div className="absolute inset-0 bg-gradient-to-tr from-amber-950/30 via-zinc-900 to-black" />}
+            background={serviceImage("service_tint", "bg-gradient-to-tr from-amber-950/30 via-zinc-900 to-black")}
           />
           <BentoCard
-            name="Paint Protection Film (PPF)"
-            description="Blindaje transparente autorregenerable de uretano contra impactos de piedras de carretera, gravilla e insectos."
+            name={t("service.ppf.name")}
+            description={t("service.ppf.description")}
             Icon={Shield}
-            cta="Cotizar PPF"
+            cta={t("service.ppf.cta")}
             href={whatsappUrl("Cotizar PPF")}
             className="md:col-span-1"
+            background={serviceImage("service_ppf", "bg-gradient-to-br from-zinc-900 to-black")}
           />
           <BentoCard
-            name="Ceramic Coating 9H"
-            description="Sellado de cristales y carrocería con brillo hidrofóbico efecto espejo de ultra larga duración."
+            name={t("service.coating.name")}
+            description={t("service.coating.description")}
             Icon={Sparkles}
-            cta="Ver detalles"
+            cta={t("service.coating.cta")}
             href={whatsappUrl("Cotizar Ceramic Coating")}
             className="md:col-span-1"
+            background={serviceImage("service_coating", "bg-gradient-to-br from-zinc-900 to-black")}
           />
           <BentoCard
-            name="Corte Computarizado Digital"
-            description="Patrones exactos pre-cortados por software digital milimétrico para cada marca y modelo. Cero cortes sobre los cristales o empaques de tu auto."
+            name={t("service.cut.name")}
+            description={t("service.cut.description")}
             Icon={Layers}
-            cta="Ver tecnología"
+            cta={t("service.cut.cta")}
             href="#simulador"
             className="md:col-span-2"
-            background={<div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black" />}
+            background={serviceImage("service_cut", "bg-gradient-to-br from-zinc-900 via-zinc-950 to-black")}
           />
         </BentoGrid>
       </section>
@@ -292,13 +249,13 @@ export default function Home() {
       {/* Pricing Packages (Skiper UI) */}
       <section id="precios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Inversión Transparente</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">Paquetes de Instalación Certificada</h2>
-          <p className="text-sm text-zinc-400 mt-2">Elige el nivel de rendimiento que mejor se adapte a tu vehículo y estilo de vida.</p>
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("pricing.eyebrow")}</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("pricing.heading")}</h2>
+          <p className="text-sm text-zinc-400 mt-2">{t("pricing.intro")}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {PRICING_PLANS.map((plan) => (
+          {plans.map((plan) => (
             <PricingCard key={plan.id} plan={plan} />
           ))}
         </div>
@@ -309,18 +266,7 @@ export default function Home() {
             {t('marquee.title')}
           </div>
           <Marquee pauseOnHover className="[--duration:25s]">
-            {[
-              "PORSCHE",
-              "TESLA",
-              "BMW M-SERIES",
-              "MERCEDES-BENZ",
-              "AUDI SPORT",
-              "RANGE ROVER",
-              "LAMBORGHINI",
-              "FERRARI",
-              "CORVETTE",
-              "LEXUS F-SPORT",
-            ].map((brand) => (
+            {brands.map((brand) => (
               <span key={brand} className="mx-4 text-sm font-black tracking-widest text-zinc-400 hover:text-amber-400 transition-colors">
                 {brand}
               </span>
@@ -346,7 +292,7 @@ export default function Home() {
             </div>
 
             <a
-              href={whatsappUrl("Hola Exclusive Tint, quiero cotizar un servicio")}
+              href={whatsappUrl(t("whatsapp.message.banner"))}
               target="_blank"
               rel="noreferrer"
               className="shrink-0"
@@ -363,9 +309,9 @@ export default function Home() {
       <footer className="border-t border-white/10 bg-zinc-950 py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
           <div className="flex items-center gap-2 text-zinc-300 font-bold">
-            <span>EXCLUSIVE TINT</span>
+            <span>{t("brand.name")}</span>
             <span>•</span>
-            <span>Estudio Automotriz de Precisión</span>
+            <span>{t("brand.tagline")}</span>
           </div>
 
           <div className="flex items-center gap-6">
