@@ -51,7 +51,7 @@ export default function Home() {
   }));
   function serviceImage(slot: string, fallback: string) {
     const uploaded = image(slot);
-    return <div role={uploaded ? "img" : undefined} aria-label={uploaded ? uploaded[locale === "es" ? "alt_es" : "alt_en"] : undefined} className={`absolute inset-0 ${fallback}`} style={uploaded ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.1)), url("${uploaded.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} />;
+    return <div role={uploaded ? "img" : undefined} aria-label={uploaded ? uploaded[locale === "es" ? "alt_es" : "alt_en"] : undefined} className={`absolute inset-0 ${fallback}`} style={uploaded ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.48)), url("${uploaded.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} />;
   }
   return (
     <div onClick={trackWhatsApp} className="relative min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
@@ -98,8 +98,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center">
-        {image("hero") && <div role="img" aria-label={image("hero")?.[locale === "es" ? "alt_es" : "alt_en"]} className="absolute inset-0 -z-10 opacity-40" style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,.2), #000), url("${image("hero")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />}
+      <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center" style={image("hero") ? { backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.55) 55%, #000), url("${image("hero")?.url}")`, backgroundSize: "cover", backgroundPosition: "center 55%" } : undefined}>
         {/* WhatsApp contact badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
@@ -243,7 +242,17 @@ export default function Home() {
             className="md:col-span-2"
             background={serviceImage("service_cut", "bg-gradient-to-br from-zinc-900 via-zinc-950 to-black")}
           />
+          <BentoCard
+            name={t("service.wrap.name")}
+            description={t("service.wrap.description")}
+            Icon={Car}
+            cta={t("service.wrap.cta")}
+            href={whatsappUrl(`${t("whatsapp.message.quote")}: Vinyl Wrap`)}
+            className="md:col-span-3"
+            background={serviceImage("service_wrap", "bg-gradient-to-br from-zinc-900 via-zinc-950 to-black")}
+          />
         </BentoGrid>
+        <p className="mt-4 text-center text-xs text-zinc-500">{t("services.photoNote")}</p>
       </section>
 
       {/* Pricing Packages (Skiper UI) */}

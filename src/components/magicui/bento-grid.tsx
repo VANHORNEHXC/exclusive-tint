@@ -45,7 +45,7 @@ export function BentoCard({
         className
       )}
     >
-      <div className="absolute inset-0 pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity">
+      <div className="absolute inset-0 pointer-events-none opacity-60 group-hover:opacity-80 transition-opacity">
         {background}
       </div>
 

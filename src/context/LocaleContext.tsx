@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
-import { defaultSiteTexts } from "@/lib/site-content";
+import { defaultSiteTexts, SITE_SAMPLE_IMAGES } from "@/lib/site-content";
 import type { SiteImage } from "@/lib/site-content";
 import type { Locale } from "@/lib/translations";
 
@@ -66,7 +66,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     return content.texts[locale]?.[key] ?? defaultSiteTexts[locale][key] ?? key;
   }
 
-  function image(slot: string) { return content.images[slot]; }
+  function image(slot: string) { return content.images[slot] ?? (SITE_SAMPLE_IMAGES as Record<string, SiteImage>)[slot]; }
 
   return (
     <LocaleContext.Provider value={{ locale, toggleLocale, t, image }}>

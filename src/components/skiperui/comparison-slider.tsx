@@ -15,7 +15,7 @@ export function ComparisonSlider({
   beforeLabel,
   afterLabel,
 }: ComparisonSliderProps) {
-  const { t, image, locale } = useLocale();
+  const { t, image } = useLocale();
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +49,7 @@ export function ComparisonSlider({
       )}
     >
       {/* Before Layer (Clear glass / exposed) */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-amber-950/30 via-zinc-900 to-zinc-950" style={image("compare_before") ? { backgroundImage: `linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)), url("${image("compare_before")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} role={image("compare_before") ? "img" : undefined} aria-label={image("compare_before")?.[locale === "es" ? "alt_es" : "alt_en"]}>
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-amber-950/30 via-zinc-900 to-zinc-950" style={image("compare_before") ? { backgroundImage: `linear-gradient(rgba(79,38,0,.38),rgba(0,0,0,.5)), url("${image("compare_before")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
         <div className="text-center p-6">
           <div className="inline-block px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-semibold mb-2">
             {t("compare.beforeBadge")}
@@ -71,7 +71,7 @@ export function ComparisonSlider({
         className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-zinc-950 via-zinc-900 to-black overflow-hidden"
         style={{
           clipPath: `polygon(${sliderPosition}% 0, 100% 0, 100% 100%, ${sliderPosition}% 100%)`,
-          backgroundImage: image("compare_after") ? `linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)), url("${image("compare_after")?.url}")` : undefined,
+          backgroundImage: image("compare_after") ? `linear-gradient(rgba(0,0,0,.67),rgba(0,0,0,.78)), url("${image("compare_after")?.url}")` : undefined,
           backgroundSize: "cover", backgroundPosition: "center",
         }}
       >

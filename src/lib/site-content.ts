@@ -20,6 +20,7 @@ const additionalFields: TextField[] = [
   ["compare.afterLabel", "Comparativa", "Pie después", "Con polarizado cerámico", "With Ceramic Tint"],
   ["services.eyebrow", "Servicios", "Etiqueta", "Especialidades Exclusive Tint", "Exclusive Tint Specialties"],
   ["services.heading", "Servicios", "Título", "Tratamientos Estéticos y de Protección Vehicular", "Vehicle Protection and Appearance Services"],
+  ["services.photoNote", "Servicios", "Nota de imágenes", "Imágenes ilustrativas. Consulta opciones y disponibilidad para tu vehículo.", "Illustrative images. Ask about options and availability for your vehicle."],
   ["pricing.eyebrow", "Precios", "Etiqueta", "Inversión Transparente", "Clear Pricing"],
   ["pricing.heading", "Precios", "Título", "Paquetes de Instalación Certificada", "Certified Installation Packages"],
   ["pricing.intro", "Precios", "Introducción", "Elige el nivel de rendimiento que mejor se adapte a tu vehículo y estilo de vida.", "Choose the level of protection that fits your vehicle and lifestyle."],
@@ -55,6 +56,7 @@ const serviceDefaults = [
   ["ppf", "Paint Protection Film (PPF)", "Blindaje transparente autorregenerable de uretano contra impactos de piedras de carretera, gravilla e insectos.", "Cotizar PPF", "Paint Protection Film (PPF)", "Self-healing clear protection against road debris and insects.", "Quote PPF"],
   ["coating", "Ceramic Coating 9H", "Sellado de cristales y carrocería con brillo hidrofóbico efecto espejo de ultra larga duración.", "Ver detalles", "Ceramic Coating 9H", "Hydrophobic ceramic finish for glass and paint.", "Details"],
   ["cut", "Corte Computarizado Digital", "Patrones exactos pre-cortados por software digital milimétrico para cada marca y modelo. Cero cortes sobre los cristales o empaques de tu auto.", "Ver tecnología", "Digital Precision Cutting", "Computer-cut patterns tailored to each vehicle model.", "See technology"],
+  ["wrap", "Vinyl Wrap", "Personaliza el acabado de tu vehículo con vinil automotriz. Consulta colores, cobertura y disponibilidad.", "Consultar Vinyl Wrap", "Vinyl Wrap", "Customize your vehicle's finish with automotive vinyl. Ask about colors, coverage, and availability.", "Ask About Vinyl Wrap"],
 ];
 for (const [id, esName, esDescription, esCta, enName, enDescription, enCta] of serviceDefaults) {
   additionalFields.push(
@@ -116,8 +118,25 @@ export const SITE_IMAGE_SLOTS = [
   { slot: "service_ppf", label: "Servicio: PPF" },
   { slot: "service_coating", label: "Servicio: coating" },
   { slot: "service_cut", label: "Servicio: corte" },
+  { slot: "service_wrap", label: "Servicio: vinyl wrap" },
   { slot: "simulator", label: "Fondo del simulador" },
 ] as const;
 export type SiteImageSlot = typeof SITE_IMAGE_SLOTS[number]["slot"];
 export const SITE_IMAGE_KEYS = new Set<string>(SITE_IMAGE_SLOTS.map((item) => item.slot));
 export interface SiteImage { slot: string; url: string; alt_es: string; alt_en: string; updated_at?: string }
+
+const sample = (slot: string, file: string, alt_es: string, alt_en: string): SiteImage => ({
+  slot, url: `/images/examples/${file}`, alt_es, alt_en,
+});
+
+export const SITE_SAMPLE_IMAGES: Record<SiteImageSlot, SiteImage> = {
+  hero: sample("hero", "hero-car.jpg", "Auto deportivo oscuro al aire libre", "Dark sports car outdoors"),
+  compare_before: sample("compare_before", "hero-car.jpg", "Auto antes de la simulación de polarizado", "Car before the tint simulation"),
+  compare_after: sample("compare_after", "hero-car.jpg", "Auto en la simulación de polarizado", "Car in the tint simulation"),
+  service_tint: sample("service_tint", "window-tint.jpg", "Técnico instalando película en la ventana de un auto", "Technician installing film on a car window"),
+  service_ppf: sample("service_ppf", "ppf-film.jpg", "Técnicos aplicando película protectora a un auto", "Technicians applying protective film to a car"),
+  service_coating: sample("service_coating", "coating-car.jpg", "Auto con acabado brillante en un estudio de detailing", "Glossy car in a detailing studio"),
+  service_cut: sample("service_cut", "cutting-plotter.jpg", "Plotter de corte en funcionamiento", "Cutting plotter in use"),
+  service_wrap: sample("service_wrap", "vinyl-wrap-install.jpg", "Técnico aplicando vinil al capó de un auto", "Technician applying vinyl to a car hood"),
+  simulator: sample("simulator", "hero-car.jpg", "Auto oscuro para el simulador de tonalidades", "Dark car for the tint simulator"),
+};

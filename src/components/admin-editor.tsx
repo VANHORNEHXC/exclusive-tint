@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SITE_IMAGE_SLOTS, SITE_TEXT_FIELDS } from "@/lib/site-content";
+import { SITE_IMAGE_SLOTS, SITE_SAMPLE_IMAGES, SITE_TEXT_FIELDS } from "@/lib/site-content";
 import type { SiteImage } from "@/lib/site-content";
 import type { Locale } from "@/lib/translations";
 import { adminRequest } from "@/lib/admin-client";
@@ -43,6 +43,7 @@ export function AdminEditor({ texts, images, onSaved }: {
         if (!response.ok) throw new Error(payload.error || "No se pudo subir la imagen");
         form.reset();
       } else {
+        if (!images[slot]) throw new Error("Selecciona un archivo para reemplazar la imagen de ejemplo.");
         await adminRequest(`media/${slot}`, "PATCH", { alt_es: data.get("alt_es"), alt_en: data.get("alt_en") });
       }
       await onSaved(); setMessage("Imagen publicada.");
@@ -78,17 +79,20 @@ export function AdminEditor({ texts, images, onSaved }: {
       <button disabled={busy} onClick={() => void saveTexts()} className="mt-5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-bold text-black disabled:opacity-50">Publicar textos</button>
     </div>
     <div className="rounded-2xl border border-white/10 bg-zinc-950 p-5 sm:p-6">
-      <h3 className="text-lg font-semibold">Imágenes</h3><p className="mt-1 text-sm text-zinc-400">PNG, JPG o WebP; máximo 8 MB. Las imágenes se guardan en el bucket configurado.</p>
-      <div className="mt-5 grid gap-5 md:grid-cols-2">{SITE_IMAGE_SLOTS.map(({ slot, label }) => <div key={`${slot}-${images[slot]?.updated_at ?? "empty"}`} className="rounded-xl border border-white/10 bg-zinc-900/60 p-4">
-        <h4 className="font-semibold">{label}</h4>
-        {images[slot] ? <div role="img" aria-label={images[slot].alt_es || label} className="mt-3 h-40 rounded-lg bg-cover bg-center" style={{ backgroundImage: `url(${images[slot].url})` }} /> : <div className="mt-3 flex h-40 items-center justify-center rounded-lg border border-dashed border-white/15 text-sm text-zinc-500">Sin imagen</div>}
+      <h3 className="text-lg font-semibold">Imágenes</h3><p className="mt-1 text-sm text-zinc-400">Fotos de ejemplo incluidas. Súbeles un reemplazo PNG, JPG o WebP de hasta 8 MB; se guardará en el bucket configurado.</p>
+      <div className="mt-5 grid gap-5 md:grid-cols-2">{SITE_IMAGE_SLOTS.map(({ slot, label }) => {
+        const custom = images[slot];
+        const display = custom ?? SITE_SAMPLE_IMAGES[slot];
+        return <div key={`${slot}-${custom?.updated_at ?? "sample"}`} className="rounded-xl border border-white/10 bg-zinc-900/60 p-4">
+        <h4 className="font-semibold">{label} <span className="ml-2 text-xs font-normal text-zinc-500">{custom ? "Imagen propia" : "Ejemplo"}</span></h4>
+        <div role="img" aria-label={display.alt_es || label} className="mt-3 h-40 rounded-lg bg-cover bg-center" style={{ backgroundImage: `url(${display.url})` }} />
         <form onSubmit={(event) => void saveImage(event, slot)} className="mt-4 space-y-3">
           <input name="file" type="file" accept="image/png,image/jpeg,image/webp" className="block w-full text-xs text-zinc-400 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-700 file:px-3 file:py-2 file:text-white" />
-          <input name="alt_es" defaultValue={images[slot]?.alt_es ?? ""} placeholder="Texto alternativo (español)" className="w-full rounded-lg border border-white/15 bg-zinc-950 p-2 text-sm" />
-          <input name="alt_en" defaultValue={images[slot]?.alt_en ?? ""} placeholder="Alt text (English)" className="w-full rounded-lg border border-white/15 bg-zinc-950 p-2 text-sm" />
-          <div className="flex gap-2"><button disabled={imageBusy === slot} className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-bold text-black disabled:opacity-50">{imageBusy === slot ? "Guardando..." : "Guardar imagen / texto alt"}</button>{images[slot] && <button type="button" onClick={() => void removeImage(slot)} className="rounded-lg border border-red-500/30 px-3 py-2 text-xs text-red-300">Quitar</button>}</div>
+          <input name="alt_es" defaultValue={display.alt_es} placeholder="Texto alternativo (español)" className="w-full rounded-lg border border-white/15 bg-zinc-950 p-2 text-sm" />
+          <input name="alt_en" defaultValue={display.alt_en} placeholder="Alt text (English)" className="w-full rounded-lg border border-white/15 bg-zinc-950 p-2 text-sm" />
+          <div className="flex gap-2"><button disabled={imageBusy === slot} className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-bold text-black disabled:opacity-50">{imageBusy === slot ? "Guardando..." : custom ? "Guardar imagen / texto alt" : "Reemplazar ejemplo"}</button>{custom && <button type="button" onClick={() => void removeImage(slot)} className="rounded-lg border border-red-500/30 px-3 py-2 text-xs text-red-300">Volver al ejemplo</button>}</div>
         </form>
-      </div>)}</div>
+      </div>})}</div>
     </div>
   </section>;
 }

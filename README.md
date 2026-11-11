@@ -22,7 +22,7 @@ Las cinco pestañas son:
 
 - **Orders:** consultar, buscar, crear y editar órdenes.
 - **Analytics:** visitas y clics de WhatsApp durante 30 días, además de órdenes y valor entregado. Los eventos son anónimos.
-- **Web Editor:** publicar textos en español e inglés y subir imágenes para ocho espacios del sitio. Requiere el bucket S3 configurado en `.env.local` para las imágenes.
+- **Web Editor:** publicar textos en español e inglés y reemplazar las fotos de ejemplo de los espacios del sitio. Requiere el bucket S3 configurado en `.env.local` para las imágenes propias. Las fuentes y licencias de las fotos de ejemplo están en [IMAGE_CREDITS.md](IMAGE_CREDITS.md).
 - **Credentials:** cambiar el acceso del portal y guardar los cinco valores de Meta cifrados. Las variables `WHATSAPP_*` del servidor siguen siendo alternativas si no se guardan valores aquí.
 - **Bot Settings:** activar el bot, definir horario, zona horaria y respuesta. Usa `{name}` para insertar el nombre del contacto.
 
