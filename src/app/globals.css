@@ -126,11 +126,6 @@ html[data-theme="light"] select {
 html[data-theme="light"] input::placeholder,
 html[data-theme="light"] textarea::placeholder { color: #6b6b72; }
 
-@media (max-width: 639px) {
-  .site-brand-name { display: none; }
-  .header-quote-label { display: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   [data-keep-dark] > video { display: none; }
   .animate-marquee, .animate-marquee-vertical, .animate-ping { animation: none; }

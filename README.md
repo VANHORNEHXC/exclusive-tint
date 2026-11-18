@@ -28,7 +28,7 @@ Las cinco pestañas son:
 
 ## WhatsApp
 
-Los enlaces de cotización usan `NEXT_PUBLIC_WHATSAPP_NUMBER` (por defecto, el número proporcionado: `+1 323 815 6876`). La URL de verificación y mensajes de Meta es `/api/webhook/whatsapp`. Configura los cinco valores de Meta en **Credentials** o en las variables `WHATSAPP_*`, y activa el bot en **Bot Settings**. El webhook valida la firma de Meta y responde a mensajes de texto recibidos durante el horario configurado. No crea órdenes ni calcula cotizaciones automáticamente.
+Los enlaces de cotización usan `NEXT_PUBLIC_WHATSAPP_NUMBER` (por defecto, el número proporcionado: `+1 323 901 3627`). La URL de verificación y mensajes de Meta es `/api/webhook/whatsapp`. Configura los cinco valores de Meta en **Credentials** o en las variables `WHATSAPP_*`, y activa el bot en **Bot Settings**. El webhook valida la firma de Meta y responde a mensajes de texto recibidos durante el horario configurado. No crea órdenes ni calcula cotizaciones automáticamente.
 
 ## Comprobaciones
 

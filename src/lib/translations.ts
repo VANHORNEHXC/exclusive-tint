@@ -12,7 +12,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     // CTA
     'cta.agendar': 'Agendar Cita',
     'cta.probar': 'Probar Tonalidades',
-    'whatsapp.cta': 'Cotizar vía WhatsApp',
+    'whatsapp.cta': 'Cotiza 24/7 por WhatsApp',
+    'whatsapp.ctaMobile': 'Cotiza 24/7',
 
     // Hero
     'hero.heading': 'Polarizado Cerámico & Protección de Élite para tu Auto',
@@ -21,7 +22,7 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Badge
     'badge.bot': 'Atención por WhatsApp',
-    'badge.cotizaciones': 'Solicita una cotización',
+    'badge.cotizaciones': 'Cotiza 24/7',
 
     // Trust highlights
     'trust.garantia': 'Garantía De Por Vida',
@@ -39,8 +40,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     // Banner
     'banner.title': '¿Tienes una consulta?',
     'banner.sub':
-      'Escríbenos por WhatsApp con los datos de tu vehículo y el servicio que deseas.',
-    'banner.cta': 'Escribir por WhatsApp',
+      'Puedes solicitar tu cotización 24/7. Envíanos por WhatsApp los datos de tu vehículo y el servicio que deseas.',
+    'banner.cta': 'Cotiza 24/7 por WhatsApp',
 
     // Footer
     'footer.copy': '© 2025 Exclusive Tint. Todos los derechos reservados.',
@@ -57,7 +58,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     // CTA
     'cta.agendar': 'Book Appointment',
     'cta.probar': 'Try Shades',
-    'whatsapp.cta': 'Quote via WhatsApp',
+    'whatsapp.cta': 'Get a WhatsApp quote 24/7',
+    'whatsapp.ctaMobile': 'Quote 24/7',
 
     // Hero
     'hero.heading': 'Ceramic Tint & Elite Protection for Your Car',
@@ -66,7 +68,7 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Badge
     'badge.bot': 'WhatsApp contact',
-    'badge.cotizaciones': 'Request a quote',
+    'badge.cotizaciones': 'Quotes 24/7',
 
     // Trust highlights
     'trust.garantia': 'Lifetime Warranty',
@@ -84,8 +86,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     // Banner
     'banner.title': 'Have a question?',
     'banner.sub':
-      'Send us your vehicle details and the service you need on WhatsApp.',
-    'banner.cta': 'Message us on WhatsApp',
+      'You can request a quote 24/7. Send us your vehicle details and the service you need on WhatsApp.',
+    'banner.cta': 'Get a WhatsApp quote 24/7',
 
     // Footer
     'footer.copy': '© 2025 Exclusive Tint. All rights reserved.',

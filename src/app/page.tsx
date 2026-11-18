@@ -45,7 +45,7 @@ export default function Home() {
     if (target.closest('a[href*="wa.me"]')) void fetch("/api/analytics", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ event: "whatsapp_click" }), keepalive: true }).catch(() => {});
   }
   const brands = t("marquee.brands").split(",").map((brand) => brand.trim()).filter(Boolean);
-  const plans: PricingPlan[] = ([{ id: "carbon", count: 5 }, { id: "ceramic", count: 6 }, { id: "ppf", count: 5 }] as const).map(({ id, count }) => ({
+  const plans: PricingPlan[] = ([{ id: "ceramic", count: 6 }, { id: "carbon", count: 5 }, { id: "ppf", count: 5 }] as const).map(({ id, count }) => ({
     id, name: t(`plan.${id}.name`), tagline: t(`plan.${id}.tagline`), price: t(`plan.${id}.price`),
     popular: id === "ceramic", features: Array.from({ length: count }, (_, index) => t(`plan.${id}.feature${index + 1}`)),
     cta: t(`plan.${id}.cta`), ctaHref: whatsappUrl(`${t("whatsapp.message.quote")}: ${t(`plan.${id}.name`)}`),
@@ -90,9 +90,11 @@ export default function Home() {
               rel="noreferrer"
               aria-label={t('whatsapp.cta')}
             >
-              <ShimmerButton shimmerColor="#fbbf24" className="px-4 py-2 text-xs font-bold">
+              <ShimmerButton shimmerColor="#fbbf24" className="px-3 py-2 text-xs font-bold sm:px-4">
                 <span className="flex items-center gap-1.5">
-                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> <span className="header-quote-label hidden sm:inline">{t('whatsapp.cta')}</span>
+                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" />
+                  <span className="sm:hidden">{t('whatsapp.ctaMobile')}</span>
+                  <span className="hidden sm:inline">{t('whatsapp.cta')}</span>
                 </span>
               </ShimmerButton>
             </a>
@@ -264,21 +266,21 @@ export default function Home() {
       </section>
 
       {/* Pricing Packages (Skiper UI) */}
-      <section id="precios" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24">
-        <div className="text-center mb-16">
+      <section id="precios" className="w-full scroll-mt-24 px-6 py-14 md:py-20 lg:px-10 xl:px-14">
+        <div className="mb-10 text-center md:mb-16">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("pricing.eyebrow")}</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("pricing.heading")}</h2>
           <p className="text-sm text-zinc-400 mt-2">{t("pricing.intro")}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-8">
           {plans.map((plan) => (
-            <PricingCard key={plan.id} plan={plan} />
+            <PricingCard key={plan.id} plan={plan} className={plan.popular ? "col-span-2 md:col-span-1" : "min-w-0"} />
           ))}
         </div>
 
         {/* Vehicle Brands Marquee (Magic UI) */}
-        <div className="mt-14 w-full overflow-hidden py-4 border-y border-white/5">
+        <div className="mt-10 w-full overflow-hidden border-y border-white/5 py-4 md:mt-14">
           <div className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3 text-center">
             {t('marquee.title')}
           </div>
