@@ -12,3 +12,7 @@ Estas imágenes son ilustrativas y no muestran trabajos de Exclusive Tint. Las c
 | `cutting-plotter.jpg` | Jens Mahnke | [Pexels](https://www.pexels.com/photo/close-up-of-a-cutting-plotter-4679092/) | [Pexels License](https://www.pexels.com/license/) |
 
 Unsplash y Pexels permiten usar estas fotos gratis en sitios web, incluidos usos comerciales. La atribución no es obligatoria según sus licencias, pero conservamos los créditos y enlaces a las fuentes.
+
+## Video de portada
+
+`public/videos/hero-wrap-install.mp4` es un montaje animado de cuatro fotografías de Auto Records en Pexels que muestran la colocación de vinil sobre un vehículo. No es metraje de Exclusive Tint. Las fuentes son [foto 1](https://www.pexels.com/photo/person-wrapping-car-hood-with-paper-10126661/), [foto 2](https://www.pexels.com/photo/a-person-wrapping-a-hood-10126663/), [foto 3](https://www.pexels.com/photo/a-man-wrapping-a-car-hood-10126665/) y [foto 4](https://www.pexels.com/photo/a-person-heating-the-wrap-of-a-car-10126666/). Uso permitido por la [licencia de Pexels](https://www.pexels.com/license/).

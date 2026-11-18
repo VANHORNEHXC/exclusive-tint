@@ -111,7 +111,7 @@ export const defaultSiteTexts: Record<Locale, Record<string, string>> = {
 };
 
 export const SITE_IMAGE_SLOTS = [
-  { slot: "hero", label: "Portada principal" },
+  { slot: "hero", label: "Poster del video de portada" },
   { slot: "compare_before", label: "Comparativa: antes" },
   { slot: "compare_after", label: "Comparativa: después" },
   { slot: "service_tint", label: "Servicio: polarizado" },
@@ -130,7 +130,7 @@ const sample = (slot: string, file: string, alt_es: string, alt_en: string): Sit
 });
 
 export const SITE_SAMPLE_IMAGES: Record<SiteImageSlot, SiteImage> = {
-  hero: sample("hero", "hero-car.jpg", "Auto deportivo oscuro al aire libre", "Dark sports car outdoors"),
+  hero: sample("hero", "vinyl-wrap-install.jpg", "Instalación de vinil sobre el capó de un vehículo", "Vinyl wrap installation on a vehicle hood"),
   compare_before: sample("compare_before", "hero-car.jpg", "Auto antes de la simulación de polarizado", "Car before the tint simulation"),
   compare_after: sample("compare_after", "hero-car.jpg", "Auto en la simulación de polarizado", "Car in the tint simulation"),
   service_tint: sample("service_tint", "window-tint.jpg", "Técnico instalando película en la ventana de un auto", "Technician installing film on a car window"),

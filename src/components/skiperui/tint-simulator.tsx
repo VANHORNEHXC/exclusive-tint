@@ -83,7 +83,7 @@ export function TintSimulator() {
   const [selected, setSelected] = useState<TintOption>(TINT_OPTIONS[1]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto rounded-3xl border border-white/10 bg-zinc-950/90 p-6 md:p-10 shadow-2xl backdrop-blur-xl">
+    <div className="w-full rounded-3xl border border-white/10 bg-zinc-950/90 p-6 md:p-10 shadow-2xl backdrop-blur-xl">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400 mb-2">
@@ -116,7 +116,7 @@ export function TintSimulator() {
       </div>
 
       {/* Simulator Vehicle Window Display with Motion Crossfade */}
-      <div className="my-8 relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black p-8 text-center min-h-[260px] flex flex-col justify-between" style={image("simulator") ? { backgroundImage: `linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85)), url("${image("simulator")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} role={image("simulator") ? "img" : undefined} aria-label={image("simulator")?.[locale === "es" ? "alt_es" : "alt_en"]}>
+      <div data-keep-dark className="my-8 relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black p-8 text-center min-h-[260px] flex flex-col justify-between" style={image("simulator") ? { backgroundImage: `linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85)), url("${image("simulator")?.url}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined} role={image("simulator") ? "img" : undefined} aria-label={image("simulator")?.[locale === "es" ? "alt_es" : "alt_en"]}>
         <div className="relative mx-auto w-full max-w-2xl py-6">
           <div className="relative h-36 w-full rounded-2xl bg-zinc-800/40 border border-zinc-700/50 p-3 flex items-center justify-center overflow-hidden">
             {/* Interior car view background */}

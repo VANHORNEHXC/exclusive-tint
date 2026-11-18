@@ -38,7 +38,7 @@ export function ComparisonSlider({
   };
 
   return (
-    <div
+    <div data-keep-dark
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}

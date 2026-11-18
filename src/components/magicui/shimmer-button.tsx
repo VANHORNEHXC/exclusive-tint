@@ -28,7 +28,7 @@ export const ShimmerButton = React.forwardRef<HTMLSpanElement, ShimmerButtonProp
     ref
   ) => {
     return (
-      <span
+      <span data-keep-dark
         style={
           {
             "--spread": "90deg",

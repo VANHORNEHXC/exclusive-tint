@@ -13,6 +13,7 @@ import type { SiteImage } from "@/lib/site-content";
 import type { Locale } from "@/lib/translations";
 import type { IntegrationKey } from "@/lib/admin-auth";
 import { adminRequest } from "@/lib/admin-client";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export interface AdminOrder {
   id: string; number: string; client: string; phone: string; email: string | null;
@@ -125,11 +126,11 @@ export function AdminPortal() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-6">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-8 xl:px-14">
+      <div className="w-full">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div><p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">Exclusive Tint</p><h1 className="mt-2 text-3xl font-black">Portal Admin</h1></div>
-          <div className="flex items-center gap-4"><Link href="/" className="text-sm text-zinc-400 hover:text-white">Ver sitio</Link>{state && <button onClick={() => void logout()} className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white"><LogOut className="h-4 w-4" /> Salir</button>}</div>
+          <div className="flex items-center gap-4"><ThemeToggle /><Link href="/" className="text-sm text-zinc-400 hover:text-white">Ver sitio</Link>{state && <button onClick={() => void logout()} className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white"><LogOut className="h-4 w-4" /> Salir</button>}</div>
         </header>
         {loading ? <p className="text-zinc-400">Cargando portal...</p> : !state ? (
           <div className="mx-auto max-w-md rounded-2xl border border-white/10 bg-zinc-950 p-7">

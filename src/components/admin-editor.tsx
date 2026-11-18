@@ -79,7 +79,7 @@ export function AdminEditor({ texts, images, onSaved }: {
       <button disabled={busy} onClick={() => void saveTexts()} className="mt-5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-bold text-black disabled:opacity-50">Publicar textos</button>
     </div>
     <div className="rounded-2xl border border-white/10 bg-zinc-950 p-5 sm:p-6">
-      <h3 className="text-lg font-semibold">Imágenes</h3><p className="mt-1 text-sm text-zinc-400">Fotos de ejemplo incluidas. Súbeles un reemplazo PNG, JPG o WebP de hasta 8 MB; se guardará en el bucket configurado.</p>
+      <h3 className="text-lg font-semibold">Imágenes</h3><p className="mt-1 text-sm text-zinc-400">Fotos de ejemplo incluidas. Súbeles un reemplazo PNG, JPG o WebP de hasta 8 MB; se guardará en el bucket configurado. La imagen de portada sirve como poster del video y como fondo cuando se reduce el movimiento.</p>
       <div className="mt-5 grid gap-5 md:grid-cols-2">{SITE_IMAGE_SLOTS.map(({ slot, label }) => {
         const custom = images[slot];
         const display = custom ?? SITE_SAMPLE_IMAGES[slot];

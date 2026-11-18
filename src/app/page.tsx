@@ -35,6 +35,7 @@ import { useLocale } from '@/context/LocaleContext';
 import { useEffect, type MouseEvent } from 'react';
 import Link from 'next/link';
 import { whatsappUrl } from '@/lib/contact';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Home() {
   const { t, image, locale } = useLocale();
@@ -63,13 +64,13 @@ export default function Home() {
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="w-full px-6 lg:px-10 xl:px-14 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-black font-black text-base shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
               ET
             </div>
             <div>
-              <span className="text-xl font-black tracking-widest text-white">{t("brand.name")}</span>
+              <span className="site-brand-name hidden text-xl font-black tracking-widest text-white sm:inline">{t("brand.name")}</span>
             </div>
           </Link>
 
@@ -82,14 +83,16 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <a
               href={whatsappUrl(t("whatsapp.message.quote"))}
               target="_blank"
               rel="noreferrer"
+              aria-label={t('whatsapp.cta')}
             >
               <ShimmerButton shimmerColor="#fbbf24" className="px-4 py-2 text-xs font-bold">
                 <span className="flex items-center gap-1.5">
-                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> {t('whatsapp.cta')}
+                  <PhoneCall className="h-3.5 w-3.5 text-amber-400" /> <span className="header-quote-label hidden sm:inline">{t('whatsapp.cta')}</span>
                 </span>
               </ShimmerButton>
             </a>
@@ -98,7 +101,12 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-20 px-6 max-w-7xl mx-auto text-center flex flex-col items-center" style={image("hero") ? { backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.55) 55%, #000), url("${image("hero")?.url}")`, backgroundSize: "cover", backgroundPosition: "center 55%" } : undefined}>
+      <section data-keep-dark className="relative isolate w-full min-h-[740px] px-6 pt-24 pb-20 lg:px-10 xl:px-14 text-center flex flex-col items-center justify-center overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url("${image("hero")?.url ?? "/images/examples/vinyl-wrap-install.jpg"}")` }}>
+        <video className="absolute inset-0 -z-20 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={image("hero")?.url ?? "/images/examples/vinyl-wrap-install.jpg"} aria-hidden="true" tabIndex={-1}>
+          <source src="/videos/hero-wrap-install.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+        </video>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/75 via-black/60 to-black/90" />
+        <span className="absolute bottom-4 right-6 text-[10px] font-medium tracking-wide text-white/70">{locale === "es" ? "Video ilustrativo de instalación" : "Illustrative installation video"}</span>
         {/* WhatsApp contact badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold text-amber-300 mb-8 backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
@@ -107,7 +115,7 @@ export default function Home() {
           <span className="text-zinc-400">{t('badge.cotizaciones')}</span>
         </div>
 
-        <GradientHeading size="xl" className="max-w-4xl mx-auto leading-none">
+        <GradientHeading size="xl" className="max-w-4xl mx-auto leading-none from-white via-white to-zinc-200">
           {t('hero.heading')}
         </GradientHeading>
 
@@ -138,7 +146,7 @@ export default function Home() {
         </div>
 
         {/* Quick Trust Highlights */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl border-t border-white/10 pt-8 text-left">
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 w-full border-t border-white/10 pt-8 text-left">
           <div className="flex items-center gap-3">
             <Award className="h-8 w-8 text-amber-400 shrink-0" />
             <div>
@@ -170,7 +178,7 @@ export default function Home() {
         </div>
 
         {/* Vehicle Brands Marquee (Magic UI) */}
-        <div className="mt-14 w-full max-w-5xl overflow-hidden py-4 border-y border-white/5">
+        <div className="mt-14 w-full overflow-hidden py-4 border-y border-white/5">
           <div className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3 text-center">
             {t('marquee.title')}
           </div>
@@ -185,12 +193,12 @@ export default function Home() {
       </section>
 
       {/* Interactive Tint Simulator (Skiper UI) */}
-      <section id="simulador" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+      <section id="simulador" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24">
         <TintSimulator />
       </section>
 
       {/* Before / After Thermal Comparison Slider (Skiper UI) */}
-      <section id="comparativa" className="py-20 px-6 max-w-5xl mx-auto scroll-mt-24 text-center">
+      <section id="comparativa" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24 text-center">
         <div className="mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("compare.eyebrow")}</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("compare.heading")}</h2>
@@ -200,7 +208,7 @@ export default function Home() {
       </section>
 
       {/* Services Bento Grid (Magic UI) */}
-      <section id="servicios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+      <section id="servicios" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24">
         <div className="text-center mb-12">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("services.eyebrow")}</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("services.heading")}</h2>
@@ -256,7 +264,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Packages (Skiper UI) */}
-      <section id="precios" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+      <section id="precios" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24">
         <div className="text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">{t("pricing.eyebrow")}</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">{t("pricing.heading")}</h2>
@@ -270,7 +278,7 @@ export default function Home() {
         </div>
 
         {/* Vehicle Brands Marquee (Magic UI) */}
-        <div className="mt-14 w-full max-w-5xl overflow-hidden py-4 border-y border-white/5">
+        <div className="mt-14 w-full overflow-hidden py-4 border-y border-white/5">
           <div className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3 text-center">
             {t('marquee.title')}
           </div>
@@ -288,7 +296,7 @@ export default function Home() {
       <ReviewsSection />
 
       {/* WhatsApp contact banner */}
-      <section className="py-16 px-6 max-w-5xl mx-auto">
+      <section className="py-16 px-6 lg:px-10 xl:px-14 w-full">
         <GlowCard glowColor="amber" className="p-8 sm:p-12 relative overflow-hidden">
           <BorderBeam size={300} duration={12} colorFrom="#f59e0b" colorTo="#eab308" />
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -315,8 +323,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-zinc-950 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
+      <footer className="border-t border-white/10 bg-zinc-950 py-12 px-6 lg:px-10 xl:px-14">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
           <div className="flex items-center gap-2 text-zinc-300 font-bold">
             <span>{t("brand.name")}</span>
             <span>•</span>

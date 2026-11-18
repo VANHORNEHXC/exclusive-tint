@@ -34,7 +34,7 @@ export function ReviewsSection() {
   }, []);
 
   return (
-    <section id="opiniones" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-24">
+    <section id="opiniones" className="py-20 px-6 lg:px-10 xl:px-14 w-full scroll-mt-24">
       <div className="text-center mb-14">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> {t("reviews.badge")}

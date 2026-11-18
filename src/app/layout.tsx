@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" className="h-full antialiased scroll-smooth">
+    <html lang="es" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{var theme=localStorage.getItem("exclusive-tint-theme");document.documentElement.dataset.theme=theme==="light"?"light":"dark";document.documentElement.style.colorScheme=theme==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}` }} />
+      </head>
       <body className="min-h-screen overflow-x-hidden bg-black text-white antialiased">
         <LocaleProvider>
           <LanguageSwitcher />

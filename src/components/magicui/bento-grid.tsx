@@ -10,7 +10,7 @@ export function BentoGrid({
   className?: string;
 }) {
   return (
-    <div
+    <div data-keep-dark
       className={cn(
         "grid w-full auto-rows-[22rem] grid-cols-1 md:grid-cols-3 gap-4",
         className
